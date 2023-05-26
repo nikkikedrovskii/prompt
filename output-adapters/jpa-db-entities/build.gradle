@@ -1,0 +1,6 @@
+dependencies {
+    implementation(project(":backend-core"))
+    
+    implementation 'com.vladmihalcea:hibernate-types-52'
+    
+}

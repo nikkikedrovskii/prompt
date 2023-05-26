@@ -1,0 +1,8 @@
+rootProject.name = 'prompt'
+include 'picture-prompt-app'
+include 'entrypoints:prompt-rest-api'
+include 'backend-core'
+include 'output-adapters:dell-e-rest-client'
+include 'output-adapters:jpa-db-adapter'
+include 'output-adapters:jpa-db-entities'
+

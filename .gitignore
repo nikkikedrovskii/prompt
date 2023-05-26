@@ -1,0 +1,10 @@
+.idea
+.gradle
+**/out
+**/build
+main.html
+application-local.yml
+**/builds
+**/cache
+.run
+

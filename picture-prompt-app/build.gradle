@@ -1,0 +1,23 @@
+plugins {
+    id 'org.springframework.boot' version "3.1.0"
+}
+
+group 'com.promptpicture.backend'
+version '0.0.1-SNAPSHOT'
+
+bootJar {
+    archiveFileName = 'prompt-be.jar'
+}
+
+springBoot {
+    mainClass = 'com.promptpicture.backend.PromptApplication'
+}
+
+dependencies {
+    implementation project(':backend-core')
+    implementation project(':output-adapters:jpa-db-adapter')
+    implementation project(':output-adapters:jpa-db-entities')
+    implementation project(':output-adapters:dell-e-rest-client')
+    implementation project(":entrypoints:prompt-rest-api")
+    implementation 'org.liquibase:liquibase-core'
+}

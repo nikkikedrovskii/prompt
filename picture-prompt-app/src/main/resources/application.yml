@@ -1,0 +1,20 @@
+info.app:
+  name: Prompt picture app
+
+app:
+  delle:
+    baseUrl: https://api.openai.com
+    accessToken: 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
+
+spring:
+  codec:
+    max-in-memory-size: 100MB
+  datasource:
+    url: jdbc:postgresql://localhost:5001/prompt?currentSchema=public
+    username: prompt
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog-master.xml
