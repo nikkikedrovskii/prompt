@@ -21,42 +21,26 @@ public class PromptController {
 
     private final PromptAdapter promptAdapter;
 
-    @GetMapping(
-            value = {"/prompt/generate"},
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
+    @PostMapping(value = {"/prompt/generate"})
     public ResponseEntity<GeneratePictureOutput> generatePicture(@RequestBody GeneratePictureInput generatePictureInput) {
          var promptText = generatePictureInput.getPromptText();
          var response = promptAdapter.generatePicture(promptText);
          return ResponseEntity.ok(response);
     }
 
-    @GetMapping(
-            value = {"/prompt/picture"},
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
+    @GetMapping(value = {"/prompt/picture"})
     public ResponseEntity<List<PromptOutput>> getListOfPrompt() {
         var response = promptAdapter.getListOfPrompt();
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(
-            value = {"/prompt/picture/{promptId}"},
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
+    @GetMapping(value = {"/prompt/picture/{promptId}"})
     public ResponseEntity<PromptOutput> getPromptDetail(@PathVariable Long promptId) {
         var response = promptAdapter.getPromptDetail(promptId);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(
-            value = {"/prompt/picture"},
-            produces = {"application/json"},
-            consumes = {"application/json"}
-    )
+    @PostMapping(value = {"/prompt/picture"})
     public ResponseEntity<Void> createPicture(@RequestBody CreatePromptInput createPromptInput) {
         promptAdapter.createPrompt(createPromptInput);
         return ResponseEntity.ok().build();

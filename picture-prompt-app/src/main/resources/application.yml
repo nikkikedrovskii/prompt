@@ -4,7 +4,7 @@ info.app:
 app:
   delle:
     baseUrl: https://api.openai.com
-    accessToken: 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
+    accessToken: *
 
 spring:
   codec:
