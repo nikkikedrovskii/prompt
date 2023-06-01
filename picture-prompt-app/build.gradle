@@ -19,5 +19,6 @@ dependencies {
     implementation project(':output-adapters:jpa-db-entities')
     implementation project(':output-adapters:dell-e-rest-client')
     implementation project(":entrypoints:prompt-rest-api")
+    implementation project(":entrypoints:quartz")
     implementation 'org.liquibase:liquibase-core'
 }

@@ -5,4 +5,5 @@ include 'backend-core'
 include 'output-adapters:dell-e-rest-client'
 include 'output-adapters:jpa-db-adapter'
 include 'output-adapters:jpa-db-entities'
+include 'entrypoints:quartz'
 

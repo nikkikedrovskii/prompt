@@ -1,4 +1,4 @@
-package com.promptpicture.backend.rest.model.output;
+package com.promptpicture.backend.entrypoint.rest.model.output;
 
 import lombok.Builder;
 import lombok.Data;

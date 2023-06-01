@@ -1,4 +1,4 @@
-package com.promptpicture.backend.rest.model.output;
+package com.promptpicture.backend.entrypoint.rest.model.output;
 
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.Data;
 @Builder
 public class GeneratePictureOutput {
 
+    private Long id;
     private String promptText;
     private String b64Json;
 
