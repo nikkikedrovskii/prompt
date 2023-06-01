@@ -1,10 +1,10 @@
-package com.promptpicture.backend.rest.controller;
+package com.promptpicture.backend.entrypoint.rest.controller;
 
-import com.promptpicture.backend.rest.adapter.PromptAdapter;
-import com.promptpicture.backend.rest.model.input.CreatePromptInput;
-import com.promptpicture.backend.rest.model.input.GeneratePictureInput;
-import com.promptpicture.backend.rest.model.output.GeneratePictureOutput;
-import com.promptpicture.backend.rest.model.output.PromptOutput;
+import com.promptpicture.backend.entrypoint.rest.adapter.PromptAdapter;
+import com.promptpicture.backend.entrypoint.rest.model.input.CreatePromptInput;
+import com.promptpicture.backend.entrypoint.rest.model.input.GeneratePictureInput;
+import com.promptpicture.backend.entrypoint.rest.model.output.GeneratePictureOutput;
+import com.promptpicture.backend.entrypoint.rest.model.output.PromptOutput;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,7 +25,8 @@ public class PromptController {
     @PostMapping(value = {"/prompt/generate"})
     public ResponseEntity<GeneratePictureOutput> generatePicture(@RequestBody GeneratePictureInput generatePictureInput) {
          var promptText = generatePictureInput.getPromptText();
-         var response = promptAdapter.generatePicture(promptText);
+         var userId = generatePictureInput.getUserId();
+         var response = promptAdapter.generatePicture(promptText, userId);
          return ResponseEntity.ok(response);
     }
 
@@ -37,6 +39,12 @@ public class PromptController {
     @GetMapping(value = {"/prompt/picture/{promptId}"})
     public ResponseEntity<PromptOutput> getPromptDetail(@PathVariable Long promptId) {
         var response = promptAdapter.getPromptDetail(promptId);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = {"/prompt/{userId}/picture"})
+    public ResponseEntity<List<PromptOutput>> getListOfPictureByUserId(@PathVariable UUID userId) {
+        var response = promptAdapter.getListOfPromptByUserId(userId);
         return ResponseEntity.ok(response);
     }
 

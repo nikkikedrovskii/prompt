@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -21,14 +22,25 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
 
     @Override
     @Transactional
-    public void savePromptPicture(String promptText, String b64Json) {
-        var promptEntity = createPromptEntity(b64Json,promptText);
-        promptEntityRepository.save(promptEntity);
+    public void savePromptPicture(Long promptId) {
+        var promptEntity = promptEntityRepository.findById(promptId).get();
+        if (!promptEntity.isSaved()) {
+            promptEntity.setSaved(true);
+            promptEntityRepository.save(promptEntity);
+        }
+    }
+
+    @Override
+    public Prompt savePromptPictureTemporarily(String promptText, String b64Json, UUID userId) {
+        var promptEntity = createPromptEntity(b64Json,promptText, false);
+        promptEntity.setUserId(userId);
+        var savedPromptEntity = promptEntityRepository.save(promptEntity);
+        return promptEntity2PromptMapper.toPrompt(savedPromptEntity);
     }
 
     @Override
     public List<Prompt> getListOfPrompt() {
-        var listOfPromptEntity = promptEntityRepository.findAll();
+        var listOfPromptEntity = promptEntityRepository.getPromptEntityBySavedIsTrue();
         return promptEntity2PromptMapper.toListOfPrompt(listOfPromptEntity);
     }
 
@@ -38,12 +50,24 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
         return promptEntity2PromptMapper.toPrompt(promptEntity);
     }
 
-    private PromptEntity createPromptEntity(String b64TextJson, String promptText){
+    @Override
+    public List<Prompt> getListOfPromptByUserId(UUID userId) {
+        var listOfPromptEntity = promptEntityRepository.getPromptEntityByUserIdAndSavedIsFalseOrderByCreatedAtAsc(userId);
+        return promptEntity2PromptMapper.toListOfPrompt(listOfPromptEntity);
+    }
+
+    @Override
+    public void deleteByPromptId(Long promptId) {
+         promptEntityRepository.deleteById(promptId);
+    }
+
+    private PromptEntity createPromptEntity(String b64TextJson, String promptText, boolean saved){
         var promptEntity = new PromptEntity();
         var promptPictureEntity = new PromptPictureEntity();
         promptPictureEntity.setText(promptText);
         promptPictureEntity.setFileB64JsonText(b64TextJson);
         promptEntity.setPromptPictureEntity(promptPictureEntity);
+        promptEntity.setSaved(saved);
         return promptEntity;
     }
 }

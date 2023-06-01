@@ -1,7 +1,7 @@
-package com.promptpicture.backend.rest.mapper;
+package com.promptpicture.backend.entrypoint.rest.mapper;
 
 import com.promptpicture.backend.core.prompt.domain.Prompt;
-import com.promptpicture.backend.rest.model.output.PromptOutput;
+import com.promptpicture.backend.entrypoint.rest.model.output.PromptOutput;
 import org.mapstruct.Mapper;
 
 import java.util.List;
