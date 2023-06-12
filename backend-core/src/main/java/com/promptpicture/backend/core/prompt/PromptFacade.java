@@ -1,6 +1,7 @@
 package com.promptpicture.backend.core.prompt;
 
 import com.promptpicture.backend.core.prompt.domain.Prompt;
+import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 import com.promptpicture.backend.core.prompt.use_case.CreatePromptUseCase;
 import com.promptpicture.backend.core.prompt.use_case.GeneratePictureUseCase;
 import com.promptpicture.backend.core.prompt.use_case.GetListOfPromptByUserIdUseCase;
@@ -26,16 +27,16 @@ public class PromptFacade {
        return generatePictureUseCase.execute(promptText, userId);
     }
 
-    public List<Prompt> getListOfPromptUseCase() {
-        return getListOfPromptUseCase.execute();
+    public List<Prompt> getListOfPromptUseCase(PromptFilter promptFilter) {
+        return getListOfPromptUseCase.execute(promptFilter);
     }
 
     public Prompt getPromptDetailUseCase(Long id){
         return getPromptDetailUseCase.execute(id);
     }
 
-    public void createPrompt(Long promptId){
-        createPromptUseCase.execute(promptId);
+    public void createPrompt(Long promptId, List<String> listOfTags){
+        createPromptUseCase.execute(promptId, listOfTags);
     }
 
     public List<Prompt> getListOfPromptByUserIdUseCase(UUID userId) {

@@ -17,4 +17,4 @@ spring:
 app:
   delle:
     baseUrl: https://api.openai.com
-    accessToken: *
+    accessToken: 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

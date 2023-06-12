@@ -2,14 +2,18 @@ package com.promptpicture.backend.db_adapter.prompt.adapter;
 
 import com.promptpicture.backend.core.prompt.adapter.PromptRepositoryAdapter;
 import com.promptpicture.backend.core.prompt.domain.Prompt;
+import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 import com.promptpicture.backend.db_adapter.prompt.mapper.PromptEntity2PromptMapper;
 import com.promptpicture.backend.jpa.prompt.entity.PromptEntity;
 import com.promptpicture.backend.jpa.prompt.entity.PromptPictureEntity;
 import com.promptpicture.backend.jpa.prompt.repository.PromptEntityRepository;
+import com.promptpicture.backend.jpa.tag.entity.TagEntity;
+import com.promptpicture.backend.jpa.tag.repository.TagEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,15 +23,24 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
 
     private final PromptEntityRepository promptEntityRepository;
     private final PromptEntity2PromptMapper promptEntity2PromptMapper;
+    private final TagEntityRepository tagEntityRepository;
 
     @Override
     @Transactional
-    public void savePromptPicture(Long promptId) {
+    public void savePromptPicture(Long promptId, List<String> listOfTags) {
         var promptEntity = promptEntityRepository.findById(promptId).get();
+
         if (!promptEntity.isSaved()) {
+            if (!listOfTags.isEmpty()) {
+                var tagEntity = getTags(listOfTags);
+                promptEntity.setPromptTags(tagEntity);
+            }
             promptEntity.setSaved(true);
             promptEntityRepository.save(promptEntity);
         }
+    }
+    private List<TagEntity> getTags(List<String> userListTag){
+        return tagEntityRepository.findAllByTagNameIn(userListTag);
     }
 
     @Override
@@ -39,9 +52,25 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
     }
 
     @Override
-    public List<Prompt> getListOfPrompt() {
-        var listOfPromptEntity = promptEntityRepository.getPromptEntityBySavedIsTrue();
-        return promptEntity2PromptMapper.toListOfPrompt(listOfPromptEntity);
+    public List<Prompt> getListOfPrompt(PromptFilter promptFilter) {
+
+        var listOfTag = promptFilter.getListOfTag();
+        var promptEntities = promptEntityRepository.findAll();
+
+         if (!listOfTag.isEmpty()) {
+             var filteredPromptEntities = promptEntities.stream().filter(promptEntity -> {
+                         var promptEntityTag = promptEntity.getPromptTags()
+                                 .stream()
+                                 .map(TagEntity::getTagName)
+                                 .toList();
+                         return !Collections.disjoint(listOfTag, promptEntityTag) && promptEntity.isSaved();
+                     }
+             ).toList();
+
+             return promptEntity2PromptMapper.toListOfPrompt(filteredPromptEntities);
+         }
+          return  promptEntity2PromptMapper.toListOfPrompt(promptEntities);
+
     }
 
     @Override
