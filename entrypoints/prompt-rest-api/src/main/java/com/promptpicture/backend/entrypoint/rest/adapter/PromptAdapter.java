@@ -1,6 +1,7 @@
 package com.promptpicture.backend.entrypoint.rest.adapter;
 
 import com.promptpicture.backend.core.prompt.PromptFacade;
+import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 import com.promptpicture.backend.entrypoint.rest.mapper.Prompt2PromptListOutputMapper;
 import com.promptpicture.backend.entrypoint.rest.model.input.CreatePromptInput;
 import com.promptpicture.backend.entrypoint.rest.model.output.GeneratePictureOutput;
@@ -29,9 +30,9 @@ public class PromptAdapter {
                 .build();
     }
 
-    public List<PromptOutput> getListOfPrompt() {
+    public List<PromptOutput> getListOfPrompt(PromptFilter promptFilter) {
 
-        var listOfPrompt = promptFacade.getListOfPromptUseCase();
+        var listOfPrompt = promptFacade.getListOfPromptUseCase(promptFilter);
 
         return prompt2PromptListOutputMapper.toListOfPromptOutput(listOfPrompt);
     }
@@ -42,7 +43,7 @@ public class PromptAdapter {
     }
 
     public void createPrompt(CreatePromptInput createPromptInput) {
-        promptFacade.createPrompt(createPromptInput.getPromptId());
+        promptFacade.createPrompt(createPromptInput.getPromptId(), createPromptInput.getListOfTags());
     }
 
     public List<PromptOutput> getListOfPromptByUserId(UUID userId){
