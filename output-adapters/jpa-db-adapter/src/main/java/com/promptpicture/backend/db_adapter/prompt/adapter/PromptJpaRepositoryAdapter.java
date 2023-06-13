@@ -13,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,7 +62,7 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
                                  .stream()
                                  .map(TagEntity::getTagName)
                                  .toList();
-                         return !Collections.disjoint(listOfTag, promptEntityTag) && promptEntity.isSaved();
+                       return promptEntityTag.containsAll(listOfTag) && promptEntity.isSaved();
                      }
              ).toList();
 
