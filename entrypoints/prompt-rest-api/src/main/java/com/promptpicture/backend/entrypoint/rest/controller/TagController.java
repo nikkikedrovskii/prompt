@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-public class TagController {
+public class TagController  {
 
     private final TagAdapter tagAdapter;
 

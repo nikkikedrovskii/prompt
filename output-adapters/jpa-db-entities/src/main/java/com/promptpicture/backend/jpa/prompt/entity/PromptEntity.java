@@ -1,5 +1,6 @@
 package com.promptpicture.backend.jpa.prompt.entity;
 
+import com.promptpicture.backend.jpa.customer.entity.CustomerEntity;
 import com.promptpicture.backend.jpa.prompt.common.entity.GeneralEntity;
 import com.promptpicture.backend.jpa.tag.entity.TagEntity;
 import jakarta.persistence.CascadeType;
@@ -12,15 +13,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -39,11 +42,20 @@ public class PromptEntity extends GeneralEntity {
     @JoinColumn(name = "picture_id", referencedColumnName = "id")
     private PromptPictureEntity promptPictureEntity;
 
-    @Column(name = "user_id")
-    private UUID userId;
+    @ManyToOne(cascade=CascadeType.ALL)
+    @JoinColumn(name = "user_id")
+    private CustomerEntity customerEntity;
 
     @Column(name = "saved")
     private boolean saved;
+
+    @Column(name = "description")
+    @ColumnDefault("description of prompt")
+    private String description;
+
+    @Column(name = "price")
+    @ColumnDefault("15.0")
+    private BigDecimal price;
 
     @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
