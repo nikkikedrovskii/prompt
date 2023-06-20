@@ -1,0 +1,52 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="add_cart_table" author="nkedrovskii">
+
+
+        <createSequence sequenceName="cart_id_seq" startValue="1000"/>
+
+        <createTable tableName="cart">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="cart_id_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cart_id"/>
+            </column>
+            <column name="total_price" type="numeric(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="external_customer_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <createSequence sequenceName="cart_item_id_seq" startValue="1000"/>
+        <createTable tableName="cart_item">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="cart_item_id_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="cart_item_id_id"/>
+            </column>
+            <column name="prompt_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price" type="numeric(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="cart_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="cart_item"
+                                 baseColumnNames="cart_id"
+                                 constraintName="cart_item_cart_fk"
+                                 referencedTableName="cart"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>
