@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:pro="http://www.liquibase.org/xml/ns/pro" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="add_vat_table" author="nkedrovskii">
+        <createSequence sequenceName="vat_id_seq" startValue="500"/>
+        <createTable tableName="vat">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="vat_id_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="vat_id"/>
+            </column>
+            <column name="country_code" type="varchar(2)">
+               <constraints nullable="false"/>
+            </column>
+            <column name="vat_rate" type="numeric(5,2)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add_eu_country_info_to_vat_table" author="nkedrovskii">
+        <insert tableName="vat">
+            <column name="country_code">CZ</column>
+            <column name="vat_rate">21.0</column>
+        </insert>
+    </changeSet>
+
+    <changeSet id="add_vat_id_to_cart" author="nkedrovskii">
+        <addColumn tableName="cart">
+            <column name="vat_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+        <addForeignKeyConstraint baseColumnNames="vat_id"
+                                 baseTableName="cart"
+                                 constraintName="cart_vat_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="vat"/>
+    </changeSet>
+
+    <changeSet id="add_country_column_to_customer_table" author="nkedrovskii">
+        <addColumn tableName="customer">
+            <column name="country" type="varchar(2)" defaultValue="CZ">
+            </column>
+        </addColumn>
+    </changeSet>
+
+
+</databaseChangeLog>
