@@ -23,6 +23,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
 
+    private static final String CZECH_REPUBLIC_COUNTRY_CODE = "CZ";
     private final PromptEntityRepository promptEntityRepository;
     private final CustomerEntityRepository customerEntityRepository;
     private final PromptEntity2PromptMapper promptEntity2PromptMapper;
@@ -55,6 +56,7 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
         } else {
             var newCustomerEntity = new CustomerEntity();
             newCustomerEntity.setExternalCustomerId(userId);
+            newCustomerEntity.setCountry(CZECH_REPUBLIC_COUNTRY_CODE);
             promptEntity.setCustomerEntity(newCustomerEntity);
         }
         var savedPromptEntity = promptEntityRepository.save(promptEntity);

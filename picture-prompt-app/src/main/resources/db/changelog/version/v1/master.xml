@@ -10,4 +10,5 @@
     <include file="add_tag_table.xml" relativeToChangelogFile="true"/>
     <include file="add_customer_table.xml" relativeToChangelogFile="true"/>
     <include file="add_cart_table.xml" relativeToChangelogFile="true"/>
+    <include file="add_vat_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

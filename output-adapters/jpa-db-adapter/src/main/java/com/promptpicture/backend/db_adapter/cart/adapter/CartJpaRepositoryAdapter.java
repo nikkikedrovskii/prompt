@@ -7,11 +7,15 @@ import com.promptpicture.backend.jpa.cart.entity.CartEntity;
 import com.promptpicture.backend.jpa.cart.entity.CartItemEntity;
 import com.promptpicture.backend.jpa.cart.repository.CartEntityRepository;
 import com.promptpicture.backend.jpa.cart.repository.CartItemEntityRepository;
+import com.promptpicture.backend.jpa.customer.repository.CustomerEntityRepository;
 import com.promptpicture.backend.jpa.prompt.entity.PromptEntity;
 import com.promptpicture.backend.jpa.prompt.repository.PromptEntityRepository;
+import com.promptpicture.backend.jpa.vat.entity.VatEntity;
+import com.promptpicture.backend.jpa.vat.repository.VatEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,6 +27,8 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
     private final CartEntityRepository cartEntityRepository;
     private final CartItemEntityRepository cartItemEntityRepository;
     private final CartEntity2CartMapper cartEntity2CartMapper;
+    private final CustomerEntityRepository customerEntityRepository;
+    private final VatEntityRepository vatEntityRepository;
 
 
     @Override
@@ -45,6 +51,10 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
                 var totalPrice = cart.getTotalPrice();
                 cart.setTotalPrice(totalPrice.add(newItemCartEntity.getPrice()));
                 cart.setCartItemEntities(cartItemEntity);
+
+                var vatRate = getVatRateByCustomerCountry(externalCustomerId);
+                cart.setVatEntity(vatRate);
+
                 cartEntityRepository.save(cart);
             }
         } else {
@@ -55,10 +65,23 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
             newCartEntity.setCartItemEntities(cartItemEntity);
             newCartEntity.setExternalCustomerId(externalCustomerId);
 
+            var vatRate = getVatRateByCustomerCountry(externalCustomerId);
+            newCartEntity.setVatEntity(vatRate);
+
             cartEntityRepository.save(newCartEntity);
 
 
         }
+
+    }
+
+    private VatEntity getVatRateByCustomerCountry(UUID externalCustomerId){
+        var customerEntity = customerEntityRepository.findByExternalCustomerId(externalCustomerId);
+        if (customerEntity.isPresent()){
+           var customerCountry = customerEntity.get().getCountry();
+            return vatEntityRepository.findVatEntityByCountryCode(customerCountry).get();
+        }
+        throw new RuntimeException("Vat rate by country code not found");
 
     }
 

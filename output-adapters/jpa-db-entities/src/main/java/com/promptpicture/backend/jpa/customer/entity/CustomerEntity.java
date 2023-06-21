@@ -11,6 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.util.UUID;
 
@@ -29,5 +30,9 @@ public class CustomerEntity extends GeneralEntity {
 
     @Column(name = "external_customer_id")
     private UUID externalCustomerId;
+
+    @Column(name = "country")
+    @ColumnDefault("CZ")
+    private String country;
 
 }

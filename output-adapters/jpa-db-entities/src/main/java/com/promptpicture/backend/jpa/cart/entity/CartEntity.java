@@ -1,6 +1,7 @@
 package com.promptpicture.backend.jpa.cart.entity;
 
 import com.promptpicture.backend.jpa.prompt.common.entity.GeneralEntity;
+import com.promptpicture.backend.jpa.vat.entity.VatEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -8,6 +9,8 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
@@ -37,6 +40,10 @@ public class CartEntity extends GeneralEntity {
 
     @Column(name = "external_customer_id")
     private UUID externalCustomerId;
+
+    @ManyToOne
+    @JoinColumn(name = "vat_id")
+    private VatEntity vatEntity;
 
     @OneToMany(mappedBy = "cartEntity", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
     private List<CartItemEntity> cartItemEntities;

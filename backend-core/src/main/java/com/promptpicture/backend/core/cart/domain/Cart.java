@@ -13,5 +13,7 @@ public class Cart {
 
     private UUID externalCustomerId;
     private BigDecimal totalPrice;
+    private BigDecimal totalPriceWithVat;
+    private BigDecimal vatRate;
     private List<CartItem> cartItemOutputList;
 }
