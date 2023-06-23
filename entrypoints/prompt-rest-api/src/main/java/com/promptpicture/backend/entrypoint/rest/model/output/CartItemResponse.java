@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 
 @Data
 @Builder
-public class CartItemOutput {
+public class CartItemResponse {
 
     private BigDecimal price;
     private String description;

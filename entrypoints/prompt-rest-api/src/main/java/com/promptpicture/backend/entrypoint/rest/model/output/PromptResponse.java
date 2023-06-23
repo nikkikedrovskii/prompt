@@ -8,13 +8,15 @@ import java.util.List;
 
 @Data
 @Builder
-public class PromptOutput {
+public class PromptResponse {
 
     private Long id;
     private String b64Json;
     private String promptText;
     private BigDecimal price;
-    private BigDecimal priceWithoutVat;
+    private BigDecimal priceWithVat;
+    private String description;
+    private String resolution;
     private List<String> tags;
 
 }

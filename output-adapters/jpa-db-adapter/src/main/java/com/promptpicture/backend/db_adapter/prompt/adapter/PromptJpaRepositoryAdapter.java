@@ -1,5 +1,6 @@
 package com.promptpicture.backend.db_adapter.prompt.adapter;
 
+import com.promptpicture.backend.core.exception.business.BadRequestException;
 import com.promptpicture.backend.core.prompt.adapter.PromptRepositoryAdapter;
 import com.promptpicture.backend.core.prompt.domain.Prompt;
 import com.promptpicture.backend.core.prompt.domain.PromptFilter;
@@ -11,6 +12,7 @@ import com.promptpicture.backend.jpa.prompt.entity.PromptPictureEntity;
 import com.promptpicture.backend.jpa.prompt.repository.PromptEntityRepository;
 import com.promptpicture.backend.jpa.tag.entity.TagEntity;
 import com.promptpicture.backend.jpa.tag.repository.TagEntityRepository;
+import com.promptpicture.backend.jpa.vat.repository.VatEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +20,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+
+import static com.promptpicture.backend.core.exception.error_code.ErrorCode.PROMPT_NOT_FOUND;
+import static com.promptpicture.backend.core.exception.error_code.ErrorCode.USER_DOES_NOT_EXIST;
 
 @Component
 @RequiredArgsConstructor
@@ -32,7 +37,8 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
     @Override
     @Transactional
     public void savePromptPicture(Long promptId, List<String> listOfTags) {
-        var promptEntity = promptEntityRepository.findById(promptId).get();
+        var promptEntity = promptEntityRepository.findById(promptId)
+                .orElseThrow(() -> new BadRequestException(USER_DOES_NOT_EXIST));
 
         if (!promptEntity.isSaved()) {
             if (!listOfTags.isEmpty()) {
@@ -87,7 +93,9 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
 
     @Override
     public Prompt findPromptById(Long id) {
-        var promptEntity = promptEntityRepository.findById(id).get();
+        var promptEntity = promptEntityRepository.findById(id)
+                .orElseThrow(() -> new BadRequestException(PROMPT_NOT_FOUND));
+
         return promptEntity2PromptMapper.toPrompt(promptEntity);
     }
 
@@ -111,6 +119,7 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
         promptEntity.setSaved(saved);
         promptEntity.setDescription("Description of prompt");
         promptEntity.setPrice(BigDecimal.valueOf(15.0));
+        promptEntity.setResolution("512x512");
 
         return promptEntity;
     }

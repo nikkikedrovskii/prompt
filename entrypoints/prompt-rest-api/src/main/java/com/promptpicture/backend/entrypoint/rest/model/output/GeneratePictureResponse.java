@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class GeneratePictureOutput {
+public class GeneratePictureResponse {
 
     private Long id;
     private String promptText;

@@ -57,6 +57,9 @@ public class PromptEntity extends GeneralEntity {
     @ColumnDefault("15.0")
     private BigDecimal price;
 
+    @Column(name = "resolution",columnDefinition = "varchar(10) default '512x512'")
+    private String resolution;
+
     @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
     @JoinTable(
             name = "prompt_tag",
