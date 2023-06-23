@@ -11,4 +11,5 @@
     <include file="add_customer_table.xml" relativeToChangelogFile="true"/>
     <include file="add_cart_table.xml" relativeToChangelogFile="true"/>
     <include file="add_vat_table.xml" relativeToChangelogFile="true"/>
+    <include file="add_resolution_column_into_prompt_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

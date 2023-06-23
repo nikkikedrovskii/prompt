@@ -12,6 +12,7 @@ public interface CartItemEntity2CartItemMapper {
 
     @Mapping(target = "promptId", source = "promptEntity.id")
     @Mapping(target = "b64Json", source = "promptEntity.promptPictureEntity.fileB64JsonText")
+    @Mapping(target = "resolution", source = "promptEntity.resolution")
     CartItem map(CartItemEntity cartItemEntity);
 
     List<CartItem> toListOfCartItem(List<CartItemEntity> cartItemEntity);

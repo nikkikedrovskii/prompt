@@ -5,9 +5,7 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class GeneratePictureInput {
+public class GetPromptDetailRequest {
 
-   private String promptText;
-   private UUID userId;
-
+    private UUID externalCustomerId;
 }

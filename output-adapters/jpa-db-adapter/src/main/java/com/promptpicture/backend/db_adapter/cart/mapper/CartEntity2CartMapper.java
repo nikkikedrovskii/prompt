@@ -22,8 +22,8 @@ public interface CartEntity2CartMapper {
    default BigDecimal calculateTotalPriceWithoutVat(CartEntity from){
         var totalPrice = from.getTotalPrice();
         var vatRate = from.getVatEntity().getVatRate();
-        var withRate = new BigDecimal(1).subtract(vatRate.divide(new BigDecimal(100)));
-        return totalPrice.divide(withRate,2,RoundingMode.HALF_EVEN);
+        var fullRate = new BigDecimal(1).subtract(vatRate.divide(new BigDecimal(100)));
+        return totalPrice.divide(fullRate,2,RoundingMode.HALF_EVEN);
     }
 
 

@@ -1,7 +1,7 @@
 package com.promptpicture.backend.entrypoint.rest.controller;
 
 import com.promptpicture.backend.entrypoint.rest.adapter.TagAdapter;
-import com.promptpicture.backend.entrypoint.rest.model.output.TagOutput;
+import com.promptpicture.backend.entrypoint.rest.model.output.TagResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,7 +16,7 @@ public class TagController  {
     private final TagAdapter tagAdapter;
 
     @GetMapping(value = {"/tag"})
-    public ResponseEntity<List<TagOutput>> getListOfTag() {
+    public ResponseEntity<List<TagResponse>> getListOfTag() {
         var response = tagAdapter.getListOfTag();
         return ResponseEntity.ok(response);
     }

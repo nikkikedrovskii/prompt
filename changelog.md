@@ -8,6 +8,7 @@
 - aitest-11 - add filter by tag for prompt
 - aitest-20 - add shopping cart 
 - aitest-32 - add vat rate to prompt table
+- aitest-24 - add get prompt detail
 
 ### Fix
 

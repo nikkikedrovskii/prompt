@@ -13,5 +13,6 @@ public class CartItem {
     private BigDecimal price;
     private String b64Json;
     private String description;
+    private String resolution;
 
 }

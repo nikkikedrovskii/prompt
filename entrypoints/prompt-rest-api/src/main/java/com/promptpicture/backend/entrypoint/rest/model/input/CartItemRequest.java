@@ -2,12 +2,12 @@ package com.promptpicture.backend.entrypoint.rest.model.input;
 
 import lombok.Data;
 
-import java.util.List;
+import java.util.UUID;
 
 @Data
-public class CreatePromptInput {
+public class CartItemRequest {
 
+    private UUID externalCustomerId;
     private Long promptId;
-    private List<String> listOfTags;
 
 }

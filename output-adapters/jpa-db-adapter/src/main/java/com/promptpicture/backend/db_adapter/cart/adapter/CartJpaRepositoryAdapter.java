@@ -2,6 +2,7 @@ package com.promptpicture.backend.db_adapter.cart.adapter;
 
 import com.promptpicture.backend.core.cart.adapter.CartRepositoryAdapter;
 import com.promptpicture.backend.core.cart.domain.Cart;
+import com.promptpicture.backend.core.exception.business.BadRequestException;
 import com.promptpicture.backend.db_adapter.cart.mapper.CartEntity2CartMapper;
 import com.promptpicture.backend.jpa.cart.entity.CartEntity;
 import com.promptpicture.backend.jpa.cart.entity.CartItemEntity;
@@ -19,10 +20,14 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import static com.promptpicture.backend.core.exception.error_code.ErrorCode.PROMPT_NOT_FOUND;
+import static com.promptpicture.backend.core.exception.error_code.ErrorCode.VAT_NOT_EXIST;
+
 @Component
 @RequiredArgsConstructor
 public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
 
+    private final static String CZECH_REPUBLIC_COUNTRY_CODE = "CZ";
     private final PromptEntityRepository promptEntityRepository;
     private final CartEntityRepository cartEntityRepository;
     private final CartItemEntityRepository cartItemEntityRepository;
@@ -41,9 +46,9 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
 
             var cart = cartEntity.get();
             var cartItemEntity = cart.getCartItemEntities();
-            var dbCartItemEntity = cartItemEntityRepository.findCartItemEntityByPromptId(promptId);
+            var promptIdCartItem = cartItemEntity.stream().map(CartItemEntity::getPromptEntity).map(PromptEntity::getId).toList();
 
-            if (dbCartItemEntity.isEmpty()) {
+            if (!promptIdCartItem.contains(promptId)) {
                 var newItemCartEntity = createCartItemEntity(promptEntity, cart);
                 cartItemEntityRepository.save(newItemCartEntity);
                 cartItemEntity.add(newItemCartEntity);
@@ -78,11 +83,13 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
     private VatEntity getVatRateByCustomerCountry(UUID externalCustomerId){
         var customerEntity = customerEntityRepository.findByExternalCustomerId(externalCustomerId);
         if (customerEntity.isPresent()){
-           var customerCountry = customerEntity.get().getCountry();
-            return vatEntityRepository.findVatEntityByCountryCode(customerCountry).get();
+            var customerCountry = customerEntity.get().getCountry();
+            return vatEntityRepository.findVatEntityByCountryCode(customerCountry)
+                    .orElseThrow(() -> new BadRequestException(VAT_NOT_EXIST));
+        } else {
+            return vatEntityRepository.findVatEntityByCountryCode(CZECH_REPUBLIC_COUNTRY_CODE)
+                    .orElseThrow(() -> new BadRequestException(VAT_NOT_EXIST));
         }
-        throw new RuntimeException("Vat rate by country code not found");
-
     }
 
     private CartItemEntity createCartItemEntity(PromptEntity prompt, CartEntity cartEntity) {

@@ -2,7 +2,7 @@ package com.promptpicture.backend.entrypoint.rest.controller;
 
 import com.promptpicture.backend.core.cart.domain.Cart;
 import com.promptpicture.backend.entrypoint.rest.adapter.CartAdapter;
-import com.promptpicture.backend.entrypoint.rest.model.input.CartItemInput;
+import com.promptpicture.backend.entrypoint.rest.model.input.CartItemRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,10 +21,10 @@ public class CartController {
     private final CartAdapter cartAdapter;
 
     @PostMapping(value = {"/cart"})
-    public ResponseEntity<Void> addCartItem(@RequestBody CartItemInput cartItemInput) {
+    public ResponseEntity<Void> addCartItem(@RequestBody CartItemRequest cartItemRequest) {
 
-        var externalCustomerId = cartItemInput.getExternalCustomerId();
-        var promptId = cartItemInput.getPromptId();
+        var externalCustomerId = cartItemRequest.getExternalCustomerId();
+        var promptId = cartItemRequest.getPromptId();
         cartAdapter.addPromptToCart(externalCustomerId,promptId);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

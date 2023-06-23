@@ -9,10 +9,10 @@ import java.util.UUID;
 
 @Data
 @Builder
-public class CartOutput {
+public class CartResponse {
 
     private UUID externalCustomerId;
     private BigDecimal totalPrice;
-    private List<CartItemOutput> cartItemOutputList;
+    private List<CartItemResponse> cartItemResponseList;
 
 }

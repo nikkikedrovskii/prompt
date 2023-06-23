@@ -2,10 +2,11 @@ package com.promptpicture.backend.entrypoint.rest.controller;
 
 import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 import com.promptpicture.backend.entrypoint.rest.adapter.PromptAdapter;
-import com.promptpicture.backend.entrypoint.rest.model.input.CreatePromptInput;
-import com.promptpicture.backend.entrypoint.rest.model.input.GeneratePictureInput;
-import com.promptpicture.backend.entrypoint.rest.model.output.GeneratePictureOutput;
-import com.promptpicture.backend.entrypoint.rest.model.output.PromptOutput;
+import com.promptpicture.backend.entrypoint.rest.model.input.CreatePromptRequest;
+import com.promptpicture.backend.entrypoint.rest.model.input.GeneratePictureRequest;
+import com.promptpicture.backend.entrypoint.rest.model.input.GetPromptDetailRequest;
+import com.promptpicture.backend.entrypoint.rest.model.output.GeneratePictureResponse;
+import com.promptpicture.backend.entrypoint.rest.model.output.PromptResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,15 +27,15 @@ public class PromptController {
     private final PromptAdapter promptAdapter;
 
     @PostMapping(value = {"/prompt/generate"})
-    public ResponseEntity<GeneratePictureOutput> generatePicture(@RequestBody GeneratePictureInput generatePictureInput) {
-         var promptText = generatePictureInput.getPromptText();
-         var userId = generatePictureInput.getUserId();
+    public ResponseEntity<GeneratePictureResponse> generatePicture(@RequestBody GeneratePictureRequest generatePictureRequest) {
+         var promptText = generatePictureRequest.getPromptText();
+         var userId = generatePictureRequest.getUserId();
          var response = promptAdapter.generatePicture(promptText, userId);
          return ResponseEntity.ok(response);
     }
 
     @GetMapping(value = {"/prompt/picture"})
-    public ResponseEntity<List<PromptOutput>> getListOfPrompt(@RequestParam(value = "listOfTag", required = false) String listOfTag) {
+    public ResponseEntity<List<PromptResponse>> getListOfPrompt(@RequestParam(value = "listOfTag", required = false) String listOfTag) {
         var promptFilter = new PromptFilter();
         if (!listOfTag.isBlank()) {
             promptFilter.setListOfTag(Arrays.stream(listOfTag.split(",")).toList());
@@ -44,20 +45,22 @@ public class PromptController {
     }
 
     @GetMapping(value = {"/prompt/picture/{promptId}"})
-    public ResponseEntity<PromptOutput> getPromptDetail(@PathVariable Long promptId) {
-        var response = promptAdapter.getPromptDetail(promptId);
+    public ResponseEntity<PromptResponse> getPromptDetail(@PathVariable Long promptId, @RequestParam(value = "userId", required = false) String customerId) {
+        var externalCustomerId = customerId == null
+                ? null : UUID.fromString(customerId);
+        var response = promptAdapter.getPromptDetail(promptId, externalCustomerId);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping(value = {"/prompt/{userId}/picture"})
-    public ResponseEntity<List<PromptOutput>> getListOfPictureByUserId(@PathVariable UUID userId) {
+    public ResponseEntity<List<PromptResponse>> getListOfPictureByUserId(@PathVariable UUID userId) {
         var response = promptAdapter.getListOfPromptByUserId(userId);
         return ResponseEntity.ok(response);
     }
 
     @PostMapping(value = {"/prompt/picture"})
-    public ResponseEntity<Void> createPicture(@RequestBody CreatePromptInput createPromptInput) {
-        promptAdapter.createPrompt(createPromptInput);
+    public ResponseEntity<Void> createPicture(@RequestBody CreatePromptRequest createPromptRequest) {
+        promptAdapter.createPrompt(createPromptRequest);
         return ResponseEntity.ok().build();
     }
 }

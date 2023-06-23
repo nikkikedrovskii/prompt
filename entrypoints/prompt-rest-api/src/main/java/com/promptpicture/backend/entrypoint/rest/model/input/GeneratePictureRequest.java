@@ -5,9 +5,9 @@ import lombok.Data;
 import java.util.UUID;
 
 @Data
-public class CartItemInput {
+public class GeneratePictureRequest {
 
-    private UUID externalCustomerId;
-    private Long promptId;
+   private String promptText;
+   private UUID userId;
 
 }
