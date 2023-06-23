@@ -7,6 +7,7 @@ import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 import com.promptpicture.backend.db_adapter.prompt.mapper.PromptEntity2PromptMapper;
 import com.promptpicture.backend.jpa.customer.entity.CustomerEntity;
 import com.promptpicture.backend.jpa.customer.repository.CustomerEntityRepository;
+import com.promptpicture.backend.jpa.price.repository.PriceEntityRepository;
 import com.promptpicture.backend.jpa.prompt.entity.PromptEntity;
 import com.promptpicture.backend.jpa.prompt.entity.PromptPictureEntity;
 import com.promptpicture.backend.jpa.prompt.repository.PromptEntityRepository;
@@ -21,6 +22,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+import static com.promptpicture.backend.core.exception.error_code.ErrorCode.PRICE_NOT_FOUND;
 import static com.promptpicture.backend.core.exception.error_code.ErrorCode.PROMPT_NOT_FOUND;
 import static com.promptpicture.backend.core.exception.error_code.ErrorCode.USER_DOES_NOT_EXIST;
 
@@ -33,6 +35,7 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
     private final CustomerEntityRepository customerEntityRepository;
     private final PromptEntity2PromptMapper promptEntity2PromptMapper;
     private final TagEntityRepository tagEntityRepository;
+    private final PriceEntityRepository priceEntityRepository;
 
     @Override
     @Transactional
@@ -118,9 +121,14 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
         promptEntity.setPromptPictureEntity(promptPictureEntity);
         promptEntity.setSaved(saved);
         promptEntity.setDescription("Description of prompt");
-        promptEntity.setPrice(BigDecimal.valueOf(15.0));
         promptEntity.setResolution("512x512");
+
+        var priceEntity = priceEntityRepository.findByResolution("512x512")
+                .orElseThrow(() -> new BadRequestException(PRICE_NOT_FOUND));
+
+        promptEntity.setPrice(priceEntity);
 
         return promptEntity;
     }
+
 }
