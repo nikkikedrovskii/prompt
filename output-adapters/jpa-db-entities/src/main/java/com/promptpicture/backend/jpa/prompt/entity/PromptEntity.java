@@ -1,6 +1,7 @@
 package com.promptpicture.backend.jpa.prompt.entity;
 
 import com.promptpicture.backend.jpa.customer.entity.CustomerEntity;
+import com.promptpicture.backend.jpa.price.entity.PriceEntity;
 import com.promptpicture.backend.jpa.prompt.common.entity.GeneralEntity;
 import com.promptpicture.backend.jpa.tag.entity.TagEntity;
 import jakarta.persistence.CascadeType;
@@ -53,9 +54,9 @@ public class PromptEntity extends GeneralEntity {
     @ColumnDefault("description of prompt")
     private String description;
 
-    @Column(name = "price")
-    @ColumnDefault("15.0")
-    private BigDecimal price;
+    @ManyToOne
+    @JoinColumn(name = "price_id")
+    private PriceEntity price;
 
     @Column(name = "resolution",columnDefinition = "varchar(10) default '512x512'")
     private String resolution;

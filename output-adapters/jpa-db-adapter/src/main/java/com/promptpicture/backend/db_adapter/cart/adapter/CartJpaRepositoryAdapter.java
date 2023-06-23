@@ -27,7 +27,7 @@ import static com.promptpicture.backend.core.exception.error_code.ErrorCode.VAT_
 @RequiredArgsConstructor
 public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
 
-    private final static String CZECH_REPUBLIC_COUNTRY_CODE = "CZ";
+    private static final String CZECH_REPUBLIC_COUNTRY_CODE = "CZ";
     private final PromptEntityRepository promptEntityRepository;
     private final CartEntityRepository cartEntityRepository;
     private final CartItemEntityRepository cartItemEntityRepository;
@@ -95,7 +95,7 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
     private CartItemEntity createCartItemEntity(PromptEntity prompt, CartEntity cartEntity) {
         var newItemCartEntity = new CartItemEntity();
         newItemCartEntity.setDescription(prompt.getDescription());
-        newItemCartEntity.setPrice(prompt.getPrice());
+        newItemCartEntity.setPrice(prompt.getPrice().getDefaultPrice());
         newItemCartEntity.setPromptEntity(prompt);
         newItemCartEntity.setCartEntity(cartEntity);
         return newItemCartEntity;

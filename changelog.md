@@ -9,6 +9,7 @@
 - aitest-20 - add shopping cart 
 - aitest-32 - add vat rate to prompt table
 - aitest-24 - add get prompt detail
+- aitest-33 - add price table
 
 ### Fix
 
