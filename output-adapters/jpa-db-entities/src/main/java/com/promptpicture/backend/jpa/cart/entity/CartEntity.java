@@ -45,6 +45,6 @@ public class CartEntity extends GeneralEntity {
     @JoinColumn(name = "vat_id")
     private VatEntity vatEntity;
 
-    @OneToMany(mappedBy = "cartEntity", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "cartEntity", fetch = FetchType.EAGER, cascade = CascadeType.PERSIST, orphanRemoval = true)
     private List<CartItemEntity> cartItemEntities;
 }

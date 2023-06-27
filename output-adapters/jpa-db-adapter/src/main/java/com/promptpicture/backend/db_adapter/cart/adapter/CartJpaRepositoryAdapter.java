@@ -107,4 +107,15 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
         var cartEntity = cartEntityRepository.findByExternalCustomerId(externalCustomerId).get();
         return cartEntity2CartMapper.map(cartEntity);
     }
+
+    @Override
+    public List<Cart> getListOfCart() {
+        var listOfCart = cartEntityRepository.findAll();
+        return cartEntity2CartMapper.map(listOfCart);
+    }
+
+    @Override
+    public void deleteShadowCart(Cart cart) {
+        cartEntityRepository.deleteById(cart.getId());
+    }
 }

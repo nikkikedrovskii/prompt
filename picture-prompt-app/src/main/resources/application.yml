@@ -9,6 +9,27 @@ spring:
     username: prompt
     password: password
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+  quartz:
+    job-store-type: jdbc
+    jdbc.initialize-schema: always
+    properties.org.quartz:
+      scheduler:
+        instanceId: AUTO
+        instanceName: prompt-quartz
+      threadPool.threadCount: 100
+      jobStore:
+        driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+        useProperties: false
+        misfireThreshold: 60000
+        tablePrefix: qrtz_
+        isClustered: true
+      plugin.shutdownHook:
+        class: org.quartz.plugins.management.ShutdownHookPlugin
+        cleanShutdown: TRUE
+    properties:
+      org.quartz.jobStore.isClustered: true
 
   liquibase:
     enabled: true
@@ -17,4 +38,4 @@ spring:
 app:
   delle:
     baseUrl: https://api.openai.com
-    accessToken: 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
+    accessToken: *
