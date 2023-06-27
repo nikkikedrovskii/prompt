@@ -113,6 +113,12 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
          promptEntityRepository.deleteById(promptId);
     }
 
+    @Override
+    public List<Prompt> getListOfAllPrompts() {
+        var listOfAllPromptEntity = promptEntityRepository.findAll();
+        return promptEntity2PromptMapper.toListOfPrompt(listOfAllPromptEntity);
+    }
+
     private PromptEntity createPromptEntity(String b64TextJson, String promptText, boolean saved){
         var promptEntity = new PromptEntity();
         var promptPictureEntity = new PromptPictureEntity();

@@ -15,7 +15,6 @@ public interface CartEntity2CartMapper {
 
     @Mapping(target = "cartItemOutputList", source = "cartItemEntities")
     @Mapping(target = "vatRate", source = "vatEntity.vatRate")
-    @Mapping(target = "updateAt", source = "updatedAt")
     @Mapping(target = "totalPriceWithVat", source = "from", qualifiedByName = "calculateTotalPriceWithoutVat")
     Cart map(CartEntity from);
 

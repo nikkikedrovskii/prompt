@@ -1,4 +1,4 @@
-package com.promptpicture.backend.entrypoint.quartz.promptcleanup.job;
+package com.promptpicture.backend.entrypoint.quartz.cart.job;
 
 import com.promptpicture.backend.core.cart.use_case.ClearShadowCartUseCase;
 import lombok.RequiredArgsConstructor;

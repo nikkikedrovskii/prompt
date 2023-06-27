@@ -1,4 +1,4 @@
-package com.promptpicture.backend.entrypoint.quartz.promptcleanup.common;
+package com.promptpicture.backend.entrypoint.quartz.cart.common;
 
 import lombok.experimental.UtilityClass;
 
