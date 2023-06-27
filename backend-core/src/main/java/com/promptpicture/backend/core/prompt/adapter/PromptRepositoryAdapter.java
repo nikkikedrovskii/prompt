@@ -20,4 +20,6 @@ public interface PromptRepositoryAdapter {
 
     void deleteByPromptId(Long promptId);
 
+    List<Prompt> getListOfAllPrompts();
+
 }

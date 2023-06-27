@@ -16,11 +16,9 @@ import com.promptpicture.backend.jpa.vat.repository.VatEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.promptpicture.backend.core.exception.error_code.ErrorCode.PROMPT_NOT_FOUND;
 import static com.promptpicture.backend.core.exception.error_code.ErrorCode.VAT_NOT_EXIST;
 
 @Component

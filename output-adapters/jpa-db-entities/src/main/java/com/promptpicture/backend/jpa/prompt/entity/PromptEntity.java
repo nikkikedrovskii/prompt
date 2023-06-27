@@ -39,7 +39,7 @@ public class PromptEntity extends GeneralEntity {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.PERSIST})
+    @OneToOne(cascade = {CascadeType.PERSIST}, orphanRemoval = true)
     @JoinColumn(name = "picture_id", referencedColumnName = "id")
     private PromptPictureEntity promptPictureEntity;
 

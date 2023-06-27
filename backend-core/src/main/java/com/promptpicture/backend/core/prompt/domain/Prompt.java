@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Data
@@ -18,5 +19,7 @@ public class Prompt {
     private String description;
     private String resolution;
     private List<String> tags;
+    private OffsetDateTime createdAt;
+    private boolean saved;
 
 }

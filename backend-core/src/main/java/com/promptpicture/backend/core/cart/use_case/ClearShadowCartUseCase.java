@@ -25,7 +25,7 @@ public class ClearShadowCartUseCase {
 
     private List<Cart> getListOfCartForDelete(List<Cart> listOfCart) {
         return listOfCart.stream()
-                .filter( cart -> ChronoUnit.DAYS.between(cart.getUpdateAt().toLocalDate(), LocalDate.now()) >= CART_LIFE_TIME_DAYS)
+                .filter( cart -> ChronoUnit.DAYS.between(cart.getUpdatedAt().toLocalDate(), LocalDate.now()) > CART_LIFE_TIME_DAYS)
                 .toList();
     }
 

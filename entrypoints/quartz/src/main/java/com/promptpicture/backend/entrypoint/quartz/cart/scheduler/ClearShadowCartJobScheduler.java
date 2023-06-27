@@ -1,6 +1,6 @@
-package com.promptpicture.backend.entrypoint.quartz.promptcleanup.scheduler;
+package com.promptpicture.backend.entrypoint.quartz.cart.scheduler;
 
-import com.promptpicture.backend.entrypoint.quartz.promptcleanup.job.ClearShadowCartJob;
+import com.promptpicture.backend.entrypoint.quartz.cart.job.ClearShadowCartJob;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.quartz.CronTrigger;
@@ -13,15 +13,15 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 
-import static com.promptpicture.backend.entrypoint.quartz.promptcleanup.common.ClearShadowCartJobIdentifiers.CLEAR_SHADOW_CART;
-import static com.promptpicture.backend.entrypoint.quartz.promptcleanup.common.ClearShadowCartJobIdentifiers.CLEAR_SHADOW_CART_JOB;
-import static com.promptpicture.backend.entrypoint.quartz.promptcleanup.common.ClearShadowCartJobIdentifiers.CLEAR_SHADOW_CART_TRIGGER;
+import static com.promptpicture.backend.entrypoint.quartz.cart.common.ClearShadowCartJobIdentifiers.CLEAR_SHADOW_CART;
+import static com.promptpicture.backend.entrypoint.quartz.cart.common.ClearShadowCartJobIdentifiers.CLEAR_SHADOW_CART_JOB;
+import static com.promptpicture.backend.entrypoint.quartz.cart.common.ClearShadowCartJobIdentifiers.CLEAR_SHADOW_CART_TRIGGER;
 
 @Component
 @RequiredArgsConstructor
 public class ClearShadowCartJobScheduler {
 
-    private static final String CLEAR_SHADOW_CART_CRON_EXPRESSION_PATTERN = "0 0 1 */2 * ?";
+    private static final String CLEAR_SHADOW_CART_CRON_EXPRESSION_PATTERN = "0 0 1 * * ?";  // # Every day at 1.AM
     private final Scheduler scheduler;
 
     @PostConstruct

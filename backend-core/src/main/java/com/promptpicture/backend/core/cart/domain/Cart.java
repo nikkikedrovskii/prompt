@@ -18,5 +18,5 @@ public class Cart {
     private BigDecimal totalPriceWithVat;
     private BigDecimal vatRate;
     private List<CartItem> cartItemOutputList;
-    private OffsetDateTime updateAt;
+    private OffsetDateTime updatedAt;
 }
