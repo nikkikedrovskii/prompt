@@ -21,4 +21,8 @@ public class CartAdapter {
     public Cart getCartByExternalCustomerId(UUID externalCustomerId) {
        return cartFacade.getCartByExternalCustomerId(externalCustomerId);
     }
+
+    public void deleteCartItem(Long cartItemId) {
+        cartFacade.deleteCartItem(cartItemId);
+    }
 }

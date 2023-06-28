@@ -15,4 +15,6 @@ public interface CartRepositoryAdapter {
 
     void deleteShadowCart(Cart cart);
 
+    void deleteCartItem(Long cartItemId);
+
 }

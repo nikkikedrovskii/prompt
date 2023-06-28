@@ -6,6 +6,7 @@ import com.promptpicture.backend.entrypoint.rest.model.input.CartItemRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,6 +34,12 @@ public class CartController {
     public ResponseEntity<Cart> getCartByExternalMerchantId(@PathVariable UUID customerId) {
         var response = cartAdapter.getCartByExternalCustomerId(customerId);
         return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping(value = {"/cart/item/{cartItemId}"})
+    public ResponseEntity<Void> deleteCartItem(@PathVariable Long cartItemId) {
+        cartAdapter.deleteCartItem(cartItemId);
+        return ResponseEntity.noContent().build();
     }
 
 }

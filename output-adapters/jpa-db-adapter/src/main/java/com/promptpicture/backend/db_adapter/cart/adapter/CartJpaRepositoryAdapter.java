@@ -15,6 +15,7 @@ import com.promptpicture.backend.jpa.vat.entity.VatEntity;
 import com.promptpicture.backend.jpa.vat.repository.VatEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -115,5 +116,20 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
     @Override
     public void deleteShadowCart(Cart cart) {
         cartEntityRepository.deleteById(cart.getId());
+    }
+
+    @Override
+    @Transactional
+    public void deleteCartItem(Long cartItemId) {
+        var cartItemEntity = cartItemEntityRepository.findById(cartItemId).get();
+        var cartItem = cartItemEntity.getCartEntity();
+        var currentTotalPrice = cartItem.getTotalPrice();
+
+        var currentCartItemEntityList = cartItem.getCartItemEntities();
+        currentCartItemEntityList.remove(cartItemEntity);
+        cartItem.setTotalPrice(currentTotalPrice.subtract(cartItemEntity.getPrice()));
+
+        cartItem.setCartItemEntities(currentCartItemEntityList);
+        cartEntityRepository.save(cartItem);
     }
 }

@@ -9,8 +9,10 @@ import java.math.BigDecimal;
 @Builder
 public class CartItem {
 
+    private Long id;
     private Long promptId;
     private BigDecimal price;
+    private BigDecimal priceWithVat;
     private String b64Json;
     private String description;
     private String resolution;
