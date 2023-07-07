@@ -1,7 +1,7 @@
 package com.promptpicture.backend.jpa.cart.entity;
 
+import com.promptpicture.backend.jpa.price.entity.PriceEntity;
 import com.promptpicture.backend.jpa.prompt.entity.PromptEntity;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +17,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -32,18 +31,16 @@ public class CartItemEntity implements Serializable {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.PERSIST})
+    @OneToOne
     @JoinColumn(name = "prompt_id", referencedColumnName = "id")
     private PromptEntity promptEntity;
-
-    @Column(name = "price")
-    private BigDecimal price;
 
     @ManyToOne
     @JoinColumn(name = "cart_id")
     private CartEntity cartEntity;
 
-    @Column(name = "description")
-    private String description;
+    @OneToOne
+    @JoinColumn(name = "price_id", referencedColumnName = "id")
+    private PriceEntity priceEntity;
 
 }

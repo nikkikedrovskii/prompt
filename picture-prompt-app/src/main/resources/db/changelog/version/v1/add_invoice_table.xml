@@ -13,15 +13,18 @@
                 <constraints nullable="false"/>
             </column>
             <column name="order_details_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-            <column name="description" type="text">
-                <constraints nullable="false"/>
+                <constraints nullable="true"/>
             </column>
             <column name="created_at" type="timestamp with time zone">
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <addForeignKeyConstraint baseColumnNames="invoice_id"
+                                 baseTableName="order_details"
+                                 constraintName="order_details_invoice_fk"
+                                 referencedColumnNames="id"
+                                 referencedTableName="invoice"/>
+
         <addForeignKeyConstraint baseColumnNames="order_details_id"
                                  baseTableName="invoice"
                                  constraintName="invoice_order_details_fk"

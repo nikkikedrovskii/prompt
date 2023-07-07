@@ -14,19 +14,10 @@ import java.util.List;
 public interface CartEntity2CartMapper {
 
     @Mapping(target = "cartItemOutputList", source = "cartItemEntities")
-    @Mapping(target = "vatRate", source = "vatEntity.vatRate")
-    @Mapping(target = "totalPriceWithVat", source = "from", qualifiedByName = "calculateTotalPriceWithVat")
+    @Mapping(target = "totalPrice", source = "priceWithoutVat")
+    @Mapping(target = "totalPriceWithVat", source = "priceWithVat")
     Cart map(CartEntity from);
 
-
     List<Cart> map(List<CartEntity> from);
-
-   @Named("calculateTotalPriceWithVat")
-   default BigDecimal calculateTotalPriceWithVat(CartEntity from){
-        var totalPrice = from.getTotalPrice();
-        var vatRate = from.getVatEntity().getVatRate();
-        var fullRate = new BigDecimal(1).subtract(vatRate.divide(new BigDecimal(100)));
-        return totalPrice.divide(fullRate,2,RoundingMode.HALF_EVEN);
-    }
 
 }

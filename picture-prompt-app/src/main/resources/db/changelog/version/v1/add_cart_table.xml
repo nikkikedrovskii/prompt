@@ -3,17 +3,22 @@
 
     <changeSet id="add_cart_table" author="nkedrovskii">
 
-
         <createSequence sequenceName="cart_id_seq" startValue="1000"/>
 
         <createTable tableName="cart">
             <column name="id" type="BIGINT" defaultValueSequenceNext="cart_id_seq">
                 <constraints nullable="false" primaryKey="true" primaryKeyName="cart_id"/>
             </column>
-            <column name="total_price" type="numeric(19,2)">
+            <column name="external_customer_id" type="uuid">
                 <constraints nullable="false"/>
             </column>
-            <column name="external_customer_id" type="uuid">
+            <column name="price_without_vat" type="numeric(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_with_vat" type="bigint">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp with time zone">
@@ -22,6 +27,19 @@
             <column name="updated_at" type="timestamp with time zone">
                 <constraints nullable="false"/>
             </column>
+            <column name="name" type="text"/>
+            <column name="last_name" type="text"/>
+            <column name="address" type="text"/>
+            <column name="city" type="text"/>
+            <column name="zip_code" type="text"/>
+            <column name="country" type="text"/>
+            <column name="dialcode" type="text"/>
+            <column name="phone" type="text"/>
+            <column name="invoice_email" type="text"/>
+            <column name="email" type="text"/>
+            <column name="payment_method_id" type="bigint"/>
+            <column name="description" type="text"/>
+            <column name="consent_data" type="timestamp with time zone"/>
         </createTable>
 
         <createSequence sequenceName="cart_item_id_seq" startValue="1000"/>
@@ -32,13 +50,10 @@
             <column name="prompt_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="price" type="numeric(19,2)">
-                <constraints nullable="false"/>
-            </column>
             <column name="cart_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="description" type="text">
+            <column name="price_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -48,5 +63,12 @@
                                  constraintName="cart_item_cart_fk"
                                  referencedTableName="cart"
                                  referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="cart_item"
+                                 baseColumnNames="prompt_id"
+                                 constraintName="cart_item_prompt_fk"
+                                 referencedTableName="prompt"
+                                 referencedColumnNames="id"/>
+
     </changeSet>
 </databaseChangeLog>

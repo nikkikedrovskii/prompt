@@ -1,0 +1,47 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
+
+    <changeSet id="add_order_table" author="nkedrovskii">
+        <createSequence sequenceName="order_details_id_seq" startValue="1000"/>
+        <createTable tableName="order_details">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="order_details_id_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_details_id_id"/>
+            </column>
+            <column name="external_customer_id" type="uuid">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_without_vat" type="numeric(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="vat" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_with_vat" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="timestamp with time zone">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="text"/>
+            <column name="last_name" type="text"/>
+            <column name="address" type="text"/>
+            <column name="city" type="text"/>
+            <column name="zip_code" type="text"/>
+            <column name="country" type="text"/>
+            <column name="dialcode" type="text"/>
+            <column name="phone" type="text"/>
+            <column name="invoice_email" type="text"/>
+            <column name="email" type="text"/>
+            <column name="payment_method_id" type="bigint"/>
+            <column name="description" type="text"/>
+            <column name="consent_data" type="timestamp with time zone"/>
+            <column name="status_id" type="bigint"/>
+            <column name="invoice_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

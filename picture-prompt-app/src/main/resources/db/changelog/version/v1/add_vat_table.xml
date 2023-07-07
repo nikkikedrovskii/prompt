@@ -23,19 +23,6 @@
         </insert>
     </changeSet>
 
-    <changeSet id="add_vat_id_to_cart" author="nkedrovskii">
-        <addColumn tableName="cart">
-            <column name="vat_id" type="BIGINT">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-        <addForeignKeyConstraint baseColumnNames="vat_id"
-                                 baseTableName="cart"
-                                 constraintName="cart_vat_fk"
-                                 referencedColumnNames="id"
-                                 referencedTableName="vat"/>
-    </changeSet>
-
     <changeSet id="add_country_column_to_customer_table" author="nkedrovskii">
         <addColumn tableName="customer">
             <column name="country" type="varchar(2)" defaultValue="CZ">

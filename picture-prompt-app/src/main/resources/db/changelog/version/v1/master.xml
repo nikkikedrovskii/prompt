@@ -6,16 +6,15 @@
 
     <include file="add_prompt_picture_table.xml" relativeToChangelogFile="true"/>
     <include file="add_prompt_table.xml" relativeToChangelogFile="true"/>
-    <include file="add_user_id_column_into_prompt_table.xml" relativeToChangelogFile="true"/>
     <include file="add_tag_table.xml" relativeToChangelogFile="true"/>
     <include file="add_customer_table.xml" relativeToChangelogFile="true"/>
     <include file="add_cart_table.xml" relativeToChangelogFile="true"/>
     <include file="add_vat_table.xml" relativeToChangelogFile="true"/>
-    <include file="add_resolution_column_into_prompt_table.xml" relativeToChangelogFile="true"/>
     <include file="add_price_table.xml" relativeToChangelogFile="true"/>
-    <include file="add_order_details_table.xml" relativeToChangelogFile="true"/>
+    <include file="add_order_table.xml" relativeToChangelogFile="true"/>
     <include file="add_order_item_table.xml" relativeToChangelogFile="true"/>
     <include file="add_invoice_table.xml" relativeToChangelogFile="true"/>
     <include file="add_payment_method_table.xml" relativeToChangelogFile="true"/>
     <include file="add_order_status_table.xml" relativeToChangelogFile="true"/>
+    <include file="add_prompt_data_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>

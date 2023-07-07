@@ -2,6 +2,8 @@ package com.promptpicture.backend.entrypoint.rest.adapter;
 
 import com.promptpicture.backend.core.cart.CartFacade;
 import com.promptpicture.backend.core.cart.domain.Cart;
+import com.promptpicture.backend.entrypoint.rest.mapper.CartItemRequest2CartItemMapper;
+import com.promptpicture.backend.entrypoint.rest.model.input.CartItemRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -13,9 +15,11 @@ import java.util.UUID;
 public class CartAdapter {
 
     private final CartFacade cartFacade;
+    private final CartItemRequest2CartItemMapper cartItemRequest2CartItemMapper;
 
-    public void addPromptToCart(UUID externalCustomerId, Long promptId) {
-        cartFacade.addPromptToCart(externalCustomerId, promptId);
+    public void addPromptToCart(CartItemRequest cartItemRequest) {
+        var customerCartItem = cartItemRequest2CartItemMapper.map(cartItemRequest);
+        cartFacade.addPromptToCart(customerCartItem);
     }
 
     public Cart getCartByExternalCustomerId(UUID externalCustomerId) {

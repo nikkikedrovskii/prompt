@@ -15,17 +15,25 @@ public interface CartItemEntity2CartItemMapper {
 
     @Mapping(target = "promptId", source = "promptEntity.id")
     @Mapping(target = "b64Json", source = "promptEntity.promptPictureEntity.fileB64JsonText")
-    @Mapping(target = "resolution", source = "promptEntity.resolution")
+    @Mapping(target = "resolution", source = "priceEntity.resolution")
+    @Mapping(target = "price", source = "from", qualifiedByName = "calculatePriceWithoutVat")
     @Mapping(target = "priceWithVat", source = "from", qualifiedByName = "calculatePriceWithVat")
     CartItem map(CartItemEntity from);
 
     List<CartItem> toListOfCartItem(List<CartItemEntity> cartItemEntity);
 
+    @Named("calculatePriceWithoutVat")
+    default BigDecimal calculatePriceWithoutVat(CartItemEntity from){
+        var promptEntity = from.getPromptEntity();
+        return promptEntity.isIndividual() ? from.getPriceEntity().getIndividualPrice() : from.getPriceEntity().getDefaultPrice();
+    }
     @Named("calculatePriceWithVat")
     default BigDecimal calculatePriceWithVat(CartItemEntity from){
-        var totalPrice = from.getPrice();
-        var vatRate = from.getCartEntity().getVatEntity().getVatRate();
+        var promptEntity = from.getPromptEntity();
+        var priceWithoutVat = promptEntity.isIndividual() ?
+                from.getPriceEntity().getIndividualPrice() : from.getPriceEntity().getDefaultPrice();
+        var vatRate = from.getCartEntity().getVatValue();
         var fullRate = new BigDecimal(1).subtract(vatRate.divide(new BigDecimal(100)));
-        return totalPrice.divide(fullRate,2, RoundingMode.HALF_EVEN);
+        return priceWithoutVat.divide(fullRate,0, RoundingMode.HALF_EVEN);
     }
 }

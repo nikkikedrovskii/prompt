@@ -20,5 +20,13 @@
             <column name="payment_method_name" value="Platba 24"/>
             <column name="description" value="Fast and secure payment for 'Česká spořitelna' clients. When using it, goods, electronic licences and ebooks are dispatched immediately."/>
         </insert>
+
+        <addForeignKeyConstraint baseTableName="cart"
+                                 baseColumnNames="payment_method_id"
+                                 constraintName="cart_payment_method_fk"
+                                 referencedTableName="payment_method"
+                                 referencedColumnNames="id"/>
     </changeSet>
+
+
 </databaseChangeLog>

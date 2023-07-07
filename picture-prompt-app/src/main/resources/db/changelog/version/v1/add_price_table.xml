@@ -19,6 +19,11 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+        <addForeignKeyConstraint baseTableName="cart_item"
+                                 baseColumnNames="price_id"
+                                 constraintName="cart_item_price_fk"
+                                 referencedTableName="price"
+                                 referencedColumnNames="id"/>
         <insert tableName="price">
             <column name="resolution">256x256</column>
             <column name="default_price">35</column>
@@ -35,17 +40,5 @@
             <column name="individual_price">65</column>
         </insert>
     </changeSet>
-
-    <changeSet id="change_price_column_type_into_prompt_table" author="nkedrovskii">
-        <dropColumn tableName="prompt" columnName="price"/>
-        <addColumn tableName="prompt">
-            <column name="price_id" type="bigint">
-                <constraints referencedTableName="price"
-                             foreignKeyName="fk_prompt_price_id"
-                             referencedColumnNames="id"/>
-            </column>
-        </addColumn>
-    </changeSet>
-
 
 </databaseChangeLog>

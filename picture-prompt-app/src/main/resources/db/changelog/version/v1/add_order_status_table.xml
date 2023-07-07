@@ -4,7 +4,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd">
 
     <changeSet id="add_order_status_table" author="nkedrovskii">
+        <createSequence sequenceName="order_status_id_seq" startValue="1000"/>
         <createTable tableName="order_status">
+            <column name="id" type="BIGINT" defaultValueSequenceNext="order_status_id_seq">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="order_status_id"/>
+            </column>
             <column name="status" type="text"/>
             <column name="description" type="text"/>
         </createTable>
@@ -28,5 +32,11 @@
             <column name="status" value="ORDER_COMPLETED"/>
             <column name="description" value="Order completely finished"/>
         </insert>
+
+        <addForeignKeyConstraint baseTableName="order_details"
+                                 baseColumnNames="status_id"
+                                 constraintName="order_details_order_state_fk"
+                                 referencedTableName="order_status"
+                                 referencedColumnNames="id"/>
     </changeSet>
 </databaseChangeLog>

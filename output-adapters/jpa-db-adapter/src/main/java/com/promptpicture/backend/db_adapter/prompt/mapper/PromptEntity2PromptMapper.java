@@ -14,7 +14,6 @@ public interface PromptEntity2PromptMapper {
 
     @Mapping(target = "b64Json", source = "promptPictureEntity.fileB64JsonText")
     @Mapping(target = "promptText", source = "promptPictureEntity.text")
-    @Mapping(target = "price", source = "price.defaultPrice")
     @Mapping(target = "tags", expression = "java(toListOfTags(from.getPromptTags()))")
     Prompt toPrompt(PromptEntity from);
 

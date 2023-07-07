@@ -11,13 +11,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @Accessors(chain = true)
 @Entity
 @Table(name = "payment_method")
 @SequenceGenerator(name = "payment_method_id_seq_gen", sequenceName = "payment_method_id_seq", allocationSize = 1)
-public class PaymentMethodEntity {
+public class PaymentMethodEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "payment_method_id_seq_gen")

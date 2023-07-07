@@ -37,8 +37,8 @@ public class PromptAdapter {
         return prompt2PromptListOutputMapper.toListOfPromptOutput(listOfPrompt);
     }
 
-    public PromptResponse getPromptDetail(Long id, UUID externalCustomerId) {
-        var prompt = promptFacade.getPromptDetailUseCase(id,externalCustomerId);
+    public PromptResponse getPromptDetail(Long id) {
+        var prompt = promptFacade.getPromptDetailUseCase(id);
         return prompt2PromptListOutputMapper.toPromptOutput(prompt);
     }
 

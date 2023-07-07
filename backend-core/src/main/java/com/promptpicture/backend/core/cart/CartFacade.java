@@ -1,6 +1,7 @@
 package com.promptpicture.backend.core.cart;
 
 import com.promptpicture.backend.core.cart.domain.Cart;
+import com.promptpicture.backend.core.cart.domain.CustomerCartItem;
 import com.promptpicture.backend.core.cart.use_case.AddPromptToCartUseCase;
 import com.promptpicture.backend.core.cart.use_case.DeleteCartItemUseCase;
 import com.promptpicture.backend.core.cart.use_case.GetCartByExternalCustomerIdUseCase;
@@ -17,8 +18,8 @@ public class CartFacade {
     private final GetCartByExternalCustomerIdUseCase getCartByExternalCustomerIdUseCase;
     private final DeleteCartItemUseCase deleteCartItemUseCase;
 
-    public void addPromptToCart(UUID externalCustomerId, Long promptId) {
-         addPromptToCartUseCase.execute(externalCustomerId, promptId);
+    public void addPromptToCart(CustomerCartItem customerCartItem) {
+         addPromptToCartUseCase.execute(customerCartItem);
     }
 
     public Cart getCartByExternalCustomerId(UUID externalCustomerId) {

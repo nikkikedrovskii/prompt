@@ -4,7 +4,6 @@ import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 import com.promptpicture.backend.entrypoint.rest.adapter.PromptAdapter;
 import com.promptpicture.backend.entrypoint.rest.model.input.CreatePromptRequest;
 import com.promptpicture.backend.entrypoint.rest.model.input.GeneratePictureRequest;
-import com.promptpicture.backend.entrypoint.rest.model.input.GetPromptDetailRequest;
 import com.promptpicture.backend.entrypoint.rest.model.output.GeneratePictureResponse;
 import com.promptpicture.backend.entrypoint.rest.model.output.PromptResponse;
 import lombok.RequiredArgsConstructor;
@@ -45,10 +44,8 @@ public class PromptController {
     }
 
     @GetMapping(value = {"/prompt/picture/{promptId}"})
-    public ResponseEntity<PromptResponse> getPromptDetail(@PathVariable Long promptId, @RequestParam(value = "userId", required = false) String customerId) {
-        var externalCustomerId = customerId == null
-                ? null : UUID.fromString(customerId);
-        var response = promptAdapter.getPromptDetail(promptId, externalCustomerId);
+    public ResponseEntity<PromptResponse> getPromptDetail(@PathVariable Long promptId) {
+        var response = promptAdapter.getPromptDetail(promptId);
         return ResponseEntity.ok(response);
     }
 
