@@ -15,6 +15,7 @@
 - aitest-37 - add cart view and the ability to remove items
 - aitest-38 - add order_details, order_item, invoice table
 - aitest-41- add payment method table
+- aitest-44 - add order's status
 
 ### Fix
 

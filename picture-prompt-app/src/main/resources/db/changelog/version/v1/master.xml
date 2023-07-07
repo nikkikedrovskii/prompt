@@ -17,4 +17,5 @@
     <include file="add_order_item_table.xml" relativeToChangelogFile="true"/>
     <include file="add_invoice_table.xml" relativeToChangelogFile="true"/>
     <include file="add_payment_method_table.xml" relativeToChangelogFile="true"/>
+    <include file="add_order_status_table.xml" relativeToChangelogFile="true"/>
 </databaseChangeLog>
