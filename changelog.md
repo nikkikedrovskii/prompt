@@ -22,6 +22,9 @@
 - aitest-48 - add order table
 - aitest-47 - add cart table 
 - aitest-39 - add step 3 and 4 into order flow
+- aitest-52 - add transfer data from cart to order_details
+- aitest-53 - add transfer data from prompt to prompt_order_data table
+- aitest-54 - add removing data from the cart table after sending an order
 
 ### Fix
 

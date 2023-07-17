@@ -153,4 +153,10 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
         cartItem.setCartItemEntities(currentCartItemEntityList);
         cartEntityRepository.save(cartItem);
     }
+
+    @Override
+    @Transactional
+    public void deleteCartByExternalCustomerId(UUID externalCustomerId) {
+        cartEntityRepository.deleteByExternalCustomerId(externalCustomerId);
+    }
 }

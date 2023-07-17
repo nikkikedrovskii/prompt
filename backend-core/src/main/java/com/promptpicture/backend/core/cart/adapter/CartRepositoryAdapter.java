@@ -18,4 +18,6 @@ public interface CartRepositoryAdapter {
 
     void deleteCartItem(Long cartItemId);
 
+    void deleteCartByExternalCustomerId(UUID externalCustomerId);
+
 }

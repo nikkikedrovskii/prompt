@@ -10,4 +10,5 @@ public interface CartEntityRepository extends JpaRepository<CartEntity, Long> {
 
     Optional<CartEntity> findByExternalCustomerId(UUID externalCustomerId);
 
+    void deleteByExternalCustomerId(UUID externalCustomerId);
 }
