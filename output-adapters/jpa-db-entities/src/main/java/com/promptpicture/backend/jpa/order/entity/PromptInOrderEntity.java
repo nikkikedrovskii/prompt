@@ -49,7 +49,7 @@ public class PromptInOrderEntity implements Serializable {
     private Boolean individual;
 
     @OneToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "prompt_data_id")
+    @JoinColumn(name = "prompt_order_data_id")
     private PromptOrderDataEntity promptOrderDataEntity;
 
 }
