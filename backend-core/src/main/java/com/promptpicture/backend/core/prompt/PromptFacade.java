@@ -31,8 +31,8 @@ public class PromptFacade {
         return getListOfPromptUseCase.execute(promptFilter);
     }
 
-    public Prompt getPromptDetailUseCase(Long id, UUID externalCustomerId){
-        return getPromptDetailUseCase.execute(id, externalCustomerId);
+    public Prompt getPromptDetailUseCase(Long id){
+        return getPromptDetailUseCase.execute(id);
     }
 
     public void createPrompt(Long promptId, List<String> listOfTags){

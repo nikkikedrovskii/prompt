@@ -39,29 +39,21 @@ public class PromptEntity extends GeneralEntity {
     @Column(name = "id")
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.PERSIST}, orphanRemoval = true)
+    @OneToOne(cascade = {CascadeType.ALL}, orphanRemoval = true)
     @JoinColumn(name = "picture_id", referencedColumnName = "id")
     private PromptPictureEntity promptPictureEntity;
 
-    @ManyToOne(cascade=CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id")
     private CustomerEntity customerEntity;
 
     @Column(name = "saved")
     private boolean saved;
 
-    @Column(name = "description")
-    @ColumnDefault("description of prompt")
-    private String description;
+    @Column(name = "individual")
+    private boolean individual;
 
-    @ManyToOne
-    @JoinColumn(name = "price_id")
-    private PriceEntity price;
-
-    @Column(name = "resolution",columnDefinition = "varchar(10) default '512x512'")
-    private String resolution;
-
-    @ManyToMany(cascade = {CascadeType.PERSIST}, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "prompt_tag",
             joinColumns = {@JoinColumn(name = "prompt_id")},

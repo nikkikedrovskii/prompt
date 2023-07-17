@@ -24,9 +24,7 @@ public class CartController {
     @PostMapping(value = {"/cart"})
     public ResponseEntity<Void> addCartItem(@RequestBody CartItemRequest cartItemRequest) {
 
-        var externalCustomerId = cartItemRequest.getExternalCustomerId();
-        var promptId = cartItemRequest.getPromptId();
-        cartAdapter.addPromptToCart(externalCustomerId,promptId);
+        cartAdapter.addPromptToCart(cartItemRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

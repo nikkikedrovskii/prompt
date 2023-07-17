@@ -29,11 +29,5 @@
                              nullable="false"/>
             </column>
         </addColumn>
-        <addColumn tableName="prompt">
-            <column name="description" type="text"/>
-        </addColumn>
-        <addColumn tableName="prompt">
-            <column name="price" type="numeric(19,2)"/>
-        </addColumn>
     </changeSet>
 </databaseChangeLog>

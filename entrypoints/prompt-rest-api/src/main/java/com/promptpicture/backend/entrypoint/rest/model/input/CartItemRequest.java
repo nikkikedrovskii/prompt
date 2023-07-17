@@ -9,5 +9,6 @@ public class CartItemRequest {
 
     private UUID externalCustomerId;
     private Long promptId;
+    private String resolution;
 
 }

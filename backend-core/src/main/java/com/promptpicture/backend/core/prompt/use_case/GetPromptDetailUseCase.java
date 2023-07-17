@@ -19,25 +19,9 @@ public class GetPromptDetailUseCase {
     private final VatRepositoryAdapter vatRepositoryAdapter;
     private final CustomerRepositoryAdapter customerRepositoryAdapter;
 
-    public Prompt execute(Long id, UUID externalCustomerId) {
+    public Prompt execute(Long id) {
 
-        var prompt = promptRepositoryAdapter.findPromptById(id);
-        var vatRate = getVatRate(externalCustomerId);
-        var promptPriceWithVat = getPromptPriceWithVat(prompt,vatRate);
-        prompt.setPriceWithVat(promptPriceWithVat);
-
-        return prompt;
-    }
-
-    private BigDecimal getVatRate(UUID externalCustomerId){
-        var countryCode = customerRepositoryAdapter.findCountryCodeByExternalCustomerId(externalCustomerId);
-        return vatRepositoryAdapter.getVatByCountryCode(countryCode).getVatRate();
-    }
-
-    private BigDecimal getPromptPriceWithVat(Prompt prompt, BigDecimal vatRate){
-        var price = prompt.getPrice();
-        var fullRate = new BigDecimal(1).subtract(vatRate.divide(new BigDecimal(100)));
-        return price.divide(fullRate,2, RoundingMode.HALF_EVEN);
+        return promptRepositoryAdapter.findPromptById(id);
     }
 
 }

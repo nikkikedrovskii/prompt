@@ -16,6 +16,12 @@
 - aitest-38 - add order_details, order_item, invoice table
 - aitest-41- add payment method table
 - aitest-44 - add order's status
+- aitest-51 - add invoice table
+- aitest-50 - add prompt_data table
+- aitest-49 - add prompt_in_order table
+- aitest-48 - add order table
+- aitest-47 - add cart table 
+- aitest-39 - add step 3 and 4 into order flow
 
 ### Fix
 

@@ -16,6 +16,11 @@
             <column name="updated_at" type="timestamp with time zone">
                 <constraints nullable="false"/>
             </column>
+            <column name="individual" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="uuid"/>
+            <column name="saved" type="boolean" defaultValue="false"/>
         </createTable>
 
         <addForeignKeyConstraint baseTableName="prompt"

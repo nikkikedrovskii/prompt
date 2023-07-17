@@ -2,6 +2,7 @@ package com.promptpicture.backend.db_adapter.cart.adapter;
 
 import com.promptpicture.backend.core.cart.adapter.CartRepositoryAdapter;
 import com.promptpicture.backend.core.cart.domain.Cart;
+import com.promptpicture.backend.core.cart.domain.CustomerCartItem;
 import com.promptpicture.backend.core.exception.business.BadRequestException;
 import com.promptpicture.backend.db_adapter.cart.mapper.CartEntity2CartMapper;
 import com.promptpicture.backend.jpa.cart.entity.CartEntity;
@@ -9,6 +10,7 @@ import com.promptpicture.backend.jpa.cart.entity.CartItemEntity;
 import com.promptpicture.backend.jpa.cart.repository.CartEntityRepository;
 import com.promptpicture.backend.jpa.cart.repository.CartItemEntityRepository;
 import com.promptpicture.backend.jpa.customer.repository.CustomerEntityRepository;
+import com.promptpicture.backend.jpa.price.repository.PriceEntityRepository;
 import com.promptpicture.backend.jpa.prompt.entity.PromptEntity;
 import com.promptpicture.backend.jpa.prompt.repository.PromptEntityRepository;
 import com.promptpicture.backend.jpa.vat.entity.VatEntity;
@@ -17,6 +19,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,50 +37,60 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
     private final CartEntity2CartMapper cartEntity2CartMapper;
     private final CustomerEntityRepository customerEntityRepository;
     private final VatEntityRepository vatEntityRepository;
+    private final PriceEntityRepository priceEntityRepository;
 
 
     @Override
-    public void addPromptToCart(UUID externalCustomerId, Long promptId) {
+    public void addPromptToCart(CustomerCartItem customerCartItem) {
+        var promptId = customerCartItem.getPromptId();
+        var externalCustomerId = customerCartItem.getExternalCustomerId();
+        var resolution = customerCartItem.getResolution();
         var promptEntity = promptEntityRepository.findById(promptId).get();
         var cartEntity = cartEntityRepository.findByExternalCustomerId(externalCustomerId);
 
 
-        if (cartEntity.isPresent()){
+       if (cartEntity.isPresent()){
 
             var cart = cartEntity.get();
             var cartItemEntity = cart.getCartItemEntities();
             var promptIdCartItem = cartItemEntity.stream().map(CartItemEntity::getPromptEntity).map(PromptEntity::getId).toList();
 
             if (!promptIdCartItem.contains(promptId)) {
-                var newItemCartEntity = createCartItemEntity(promptEntity, cart);
+                var newItemCartEntity = createCartItemEntity(promptEntity, cart, resolution);
                 cartItemEntityRepository.save(newItemCartEntity);
                 cartItemEntity.add(newItemCartEntity);
 
-                var totalPrice = cart.getTotalPrice();
-                cart.setTotalPrice(totalPrice.add(newItemCartEntity.getPrice()));
+                var priceWithoutVat = cart.getPriceWithoutVat();
+                cart.setPriceWithoutVat(priceWithoutVat.add(newItemCartEntity.getPriceEntity().getDefaultPrice()));
                 cart.setCartItemEntities(cartItemEntity);
 
                 var vatRate = getVatRateByCustomerCountry(externalCustomerId);
-                cart.setVatEntity(vatRate);
-
+                cart.setVatValue(vatRate.getVatRate());
+                cart.setPriceWithVat(calculateTotalPriceWithVat(cart.getPriceWithoutVat(),vatRate.getVatRate()));
                 cartEntityRepository.save(cart);
             }
         } else {
             var newCartEntity = new CartEntity();
-            var newItemCartEntity = createCartItemEntity(promptEntity, newCartEntity);
-            newCartEntity.setTotalPrice(newItemCartEntity.getPrice());
+            var newItemCartEntity = createCartItemEntity(promptEntity, newCartEntity, resolution);
+            var priceWithoutVat = newItemCartEntity.getPriceEntity().getDefaultPrice();
+            newCartEntity.setPriceWithoutVat(priceWithoutVat);
             var cartItemEntity =  List.of(newItemCartEntity);
             newCartEntity.setCartItemEntities(cartItemEntity);
             newCartEntity.setExternalCustomerId(externalCustomerId);
 
             var vatRate = getVatRateByCustomerCountry(externalCustomerId);
-            newCartEntity.setVatEntity(vatRate);
-
+            newCartEntity.setVatValue(vatRate.getVatRate());
+            newCartEntity.setPriceWithVat(calculateTotalPriceWithVat(priceWithoutVat,vatRate.getVatRate()));
             cartEntityRepository.save(newCartEntity);
 
 
         }
 
+    }
+
+    private BigDecimal calculateTotalPriceWithVat(BigDecimal priceWithoutVat, BigDecimal vatRate){
+        var fullRate = new BigDecimal(1).subtract(vatRate.divide(new BigDecimal(100)));
+        return priceWithoutVat.divide(fullRate,2, RoundingMode.HALF_EVEN);
     }
 
     private VatEntity getVatRateByCustomerCountry(UUID externalCustomerId){
@@ -91,10 +105,10 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
         }
     }
 
-    private CartItemEntity createCartItemEntity(PromptEntity prompt, CartEntity cartEntity) {
+   private CartItemEntity createCartItemEntity(PromptEntity prompt, CartEntity cartEntity, String resolution) {
+        var price = priceEntityRepository.findByResolution(resolution).get();
         var newItemCartEntity = new CartItemEntity();
-        newItemCartEntity.setDescription(prompt.getDescription());
-        newItemCartEntity.setPrice(prompt.getPrice().getDefaultPrice());
+        newItemCartEntity.setPriceEntity(price);
         newItemCartEntity.setPromptEntity(prompt);
         newItemCartEntity.setCartEntity(cartEntity);
         return newItemCartEntity;
@@ -121,13 +135,20 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
     @Override
     @Transactional
     public void deleteCartItem(Long cartItemId) {
-        var cartItemEntity = cartItemEntityRepository.findById(cartItemId).get();
+       var cartItemEntity = cartItemEntityRepository.findById(cartItemId).get();
         var cartItem = cartItemEntity.getCartEntity();
-        var currentTotalPrice = cartItem.getTotalPrice();
+        var currentTotalPrice = cartItem.getPriceWithoutVat();
+        var currentTotalPriceWithVat = cartItem.getPriceWithVat();
 
         var currentCartItemEntityList = cartItem.getCartItemEntities();
         currentCartItemEntityList.remove(cartItemEntity);
-        cartItem.setTotalPrice(currentTotalPrice.subtract(cartItemEntity.getPrice()));
+
+        var previousPrice = cartItemEntity.getPromptEntity().isIndividual() ?
+                cartItemEntity.getPriceEntity().getIndividualPrice() :
+                cartItemEntity.getPriceEntity().getDefaultPrice();
+        var previousePriceWithVat = calculateTotalPriceWithVat(previousPrice,cartItem.getVatValue());
+        cartItem.setPriceWithoutVat(currentTotalPrice.subtract(previousPrice));
+        cartItem.setPriceWithVat(currentTotalPriceWithVat.subtract(previousePriceWithVat));
 
         cartItem.setCartItemEntities(currentCartItemEntityList);
         cartEntityRepository.save(cartItem);

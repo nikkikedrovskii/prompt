@@ -126,13 +126,7 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
         promptPictureEntity.setFileB64JsonText(b64TextJson);
         promptEntity.setPromptPictureEntity(promptPictureEntity);
         promptEntity.setSaved(saved);
-        promptEntity.setDescription("Description of prompt");
-        promptEntity.setResolution("512x512");
-
-        var priceEntity = priceEntityRepository.findByResolution("512x512")
-                .orElseThrow(() -> new BadRequestException(PRICE_NOT_FOUND));
-
-        promptEntity.setPrice(priceEntity);
+        promptEntity.setIndividual(false);
 
         return promptEntity;
     }

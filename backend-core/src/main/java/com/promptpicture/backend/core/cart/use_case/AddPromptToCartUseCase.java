@@ -1,6 +1,7 @@
 package com.promptpicture.backend.core.cart.use_case;
 
 import com.promptpicture.backend.core.cart.adapter.CartRepositoryAdapter;
+import com.promptpicture.backend.core.cart.domain.CustomerCartItem;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +13,8 @@ public class AddPromptToCartUseCase {
 
     private final CartRepositoryAdapter cartRepositoryAdapter;
 
-    public void execute(UUID externalCustomerId, Long promptId) {
-        cartRepositoryAdapter.addPromptToCart(externalCustomerId, promptId);
+    public void execute(CustomerCartItem customerCartItem) {
+        cartRepositoryAdapter.addPromptToCart(customerCartItem);
     }
 
 }
