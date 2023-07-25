@@ -25,6 +25,8 @@
 - aitest-52 - add transfer data from cart to order_details
 - aitest-53 - add transfer data from prompt to prompt_order_data table
 - aitest-54 - add removing data from the cart table after sending an order
+- aitest-40 - add order summary
+  aitest-46 - add job for checking changed order items
 
 ### Fix
 

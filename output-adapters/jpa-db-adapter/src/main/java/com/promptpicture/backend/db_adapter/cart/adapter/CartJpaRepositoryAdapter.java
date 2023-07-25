@@ -106,7 +106,7 @@ public class CartJpaRepositoryAdapter implements CartRepositoryAdapter {
     }
 
    private CartItemEntity createCartItemEntity(PromptEntity prompt, CartEntity cartEntity, String resolution) {
-        var price = priceEntityRepository.findByResolution(resolution).get();
+        var price = priceEntityRepository.findPriceEntityByResolution(resolution).get();
         var newItemCartEntity = new CartItemEntity();
         newItemCartEntity.setPriceEntity(price);
         newItemCartEntity.setPromptEntity(prompt);

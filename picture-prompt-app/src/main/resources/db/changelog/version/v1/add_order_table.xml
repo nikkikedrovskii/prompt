@@ -15,10 +15,10 @@
             <column name="price_without_vat" type="numeric(19,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="vat" type="bigint">
+            <column name="vat" type="numeric(5,2)">
                 <constraints nullable="false"/>
             </column>
-            <column name="price_with_vat" type="bigint">
+            <column name="price_with_vat" type="numeric(19,2)">
                 <constraints nullable="false"/>
             </column>
             <column name="created_at" type="timestamp with time zone">

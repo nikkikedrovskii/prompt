@@ -13,4 +13,10 @@ public interface PromptInOrderEntityRepository extends JpaRepository<PromptInOrd
             " WHERE pio.promptId = :promptId " +
             "AND pio.resolution = :resolution")
     Optional<PromptInOrderEntity> getPromptInOrderEntitiesByPromptIdAndResolution(@Param("promptId") Long promptId, @Param("resolution") String resolution);
+
+    @Query("SELECT pioe FROM PromptInOrderEntity pioe JOIN FETCH pioe.orderDetailsEntity" +
+            " WHERE pioe.orderDetailsEntity.id = :orderId " +
+            "AND pioe.promptId = :promptId " +
+             " AND pioe.resolution = :resolution")
+    Optional<PromptInOrderEntity> findPromptInOrderEntityByPromptIdAndOrderDetailsEntity(@Param("promptId") Long promptId, @Param("orderId") Long orderId, @Param("resolution") String resolution);
 }

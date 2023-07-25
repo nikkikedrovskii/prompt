@@ -3,8 +3,10 @@ package com.promptpicture.backend.db_adapter.order.adapter;
 import com.promptpicture.backend.core.common.enumeration.OrderStatus;
 import com.promptpicture.backend.core.exception.business.BadRequestException;
 import com.promptpicture.backend.core.order.adapter.OrderDetailsRepositoryAdapter;
+import com.promptpicture.backend.core.order.domain.Order;
 import com.promptpicture.backend.core.order.domain.OrderDetails;
 import com.promptpicture.backend.db_adapter.component.ImageCompressionComponent;
+import com.promptpicture.backend.db_adapter.order.mapper.OrderDetailEntity2OrderMapper;
 import com.promptpicture.backend.jpa.cart.entity.CartEntity;
 import com.promptpicture.backend.jpa.cart.entity.CartItemEntity;
 import com.promptpicture.backend.jpa.cart.repository.CartEntityRepository;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.promptpicture.backend.core.exception.error_code.ErrorCode.CART_NOT_FOUND;
+import static com.promptpicture.backend.core.exception.error_code.ErrorCode.ORDER_NOT_FOUND;
 
 @Component
 @RequiredArgsConstructor
@@ -37,6 +40,7 @@ public class OrderDetailsJpaRepositoryAdapter implements OrderDetailsRepositoryA
     private final PaymentMethodEntityRepository paymentMethodEntityRepository;
     private final PromptInOrderEntityRepository promptInOrderEntityRepository;
     private final ImageCompressionComponent imageCompressionComponent;
+    private final OrderDetailEntity2OrderMapper orderDetailEntity2OrderMapper;
 
 
     @Override
@@ -49,6 +53,37 @@ public class OrderDetailsJpaRepositoryAdapter implements OrderDetailsRepositoryA
         orderDetailsEntity.setExternalCustomerId(externalCustomerId);
 
         orderDetailsEntityRepository.save(orderDetailsEntity);
+    }
+
+    @Override
+    public Order getOrderDetail(UUID externalCustomerId) {
+        var orderDetailsEntity = orderDetailsEntityRepository.findOrderDetailsEntityByExternalCustomerId(externalCustomerId)
+                .orElseThrow(() -> new BadRequestException(ORDER_NOT_FOUND));
+        return orderDetailEntity2OrderMapper.map(orderDetailsEntity);
+    }
+
+    @Override
+    public void updateOrder(Order order) {
+
+        var orderDetailsEntity = orderDetailsEntityRepository.findOrderDetailsEntityByExternalCustomerId(order.getExternalCustomerId())
+                .orElseThrow(() -> new BadRequestException(ORDER_NOT_FOUND));
+
+
+        orderDetailsEntity.setPriceWithoutVat(order.getPriceWithoutVat());
+        orderDetailsEntity.setPriceWithVat(order.getPriceWithVat());
+        orderDetailsEntity.setVatValue(order.getVatValue());
+
+
+        var promptInOrderList = order.getPromptInOrderList();
+        promptInOrderList.forEach(promptInOrder -> {
+            var promptInOrderDB = promptInOrderEntityRepository.findPromptInOrderEntityByPromptIdAndOrderDetailsEntity(promptInOrder.getPromptId(), order.getId(), promptInOrder.getResolution()).get();
+            promptInOrderDB.setPriceWithoutVat(promptInOrder.getPriceWithoutVat());
+            promptInOrderEntityRepository.save(promptInOrderDB);
+        });
+
+        orderDetailsEntity.setConsentData(OffsetDateTime.now());
+        orderDetailsEntityRepository.save(orderDetailsEntity);
+
     }
 
     private OrderDetailsEntity createOrderDetails(CartEntity cartEntity, OrderDetails orderDetails){
