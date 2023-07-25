@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface PriceEntityRepository extends JpaRepository<PriceEntity, Long> {
 
-    Optional<PriceEntity> findByResolution(String resolution);
+    Optional<PriceEntity> findPriceEntityByResolution(String resolution);
 }

@@ -13,16 +13,13 @@ import com.promptpicture.backend.jpa.prompt.entity.PromptPictureEntity;
 import com.promptpicture.backend.jpa.prompt.repository.PromptEntityRepository;
 import com.promptpicture.backend.jpa.tag.entity.TagEntity;
 import com.promptpicture.backend.jpa.tag.repository.TagEntityRepository;
-import com.promptpicture.backend.jpa.vat.repository.VatEntityRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-import static com.promptpicture.backend.core.exception.error_code.ErrorCode.PRICE_NOT_FOUND;
 import static com.promptpicture.backend.core.exception.error_code.ErrorCode.PROMPT_NOT_FOUND;
 import static com.promptpicture.backend.core.exception.error_code.ErrorCode.USER_DOES_NOT_EXIST;
 
