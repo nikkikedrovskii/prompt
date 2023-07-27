@@ -38,6 +38,6 @@ public class CartController {
     public ResponseEntity<Void> deleteCartItem(@PathVariable Long cartItemId) {
         cartAdapter.deleteCartItem(cartItemId);
         return ResponseEntity.noContent().build();
-    }
 
 }
+    }
