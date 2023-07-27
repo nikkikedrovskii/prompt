@@ -2,8 +2,10 @@ package com.promptpicture.backend.entrypoint.rest.controller;
 
 import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 import com.promptpicture.backend.entrypoint.rest.adapter.PromptAdapter;
+import com.promptpicture.backend.entrypoint.rest.model.input.CreateIndividualPromptRequest;
 import com.promptpicture.backend.entrypoint.rest.model.input.CreatePromptRequest;
 import com.promptpicture.backend.entrypoint.rest.model.input.GeneratePictureRequest;
+import com.promptpicture.backend.entrypoint.rest.model.output.CreateIndividualPromptResponse;
 import com.promptpicture.backend.entrypoint.rest.model.output.GeneratePictureResponse;
 import com.promptpicture.backend.entrypoint.rest.model.output.PromptResponse;
 import lombok.RequiredArgsConstructor;
@@ -59,5 +61,11 @@ public class PromptController {
     public ResponseEntity<Void> createPicture(@RequestBody CreatePromptRequest createPromptRequest) {
         promptAdapter.createPrompt(createPromptRequest);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(value = {"/prompt/individual"})
+    public ResponseEntity<CreateIndividualPromptResponse> saveIndividualPrompt(@RequestBody CreateIndividualPromptRequest createIndividualPromptRequest) {
+        var response = promptAdapter.saveIndividualPrompt(createIndividualPromptRequest);
+        return ResponseEntity.ok(response);
     }
 }

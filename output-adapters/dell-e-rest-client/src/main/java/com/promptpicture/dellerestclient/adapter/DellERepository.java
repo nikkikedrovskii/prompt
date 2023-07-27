@@ -1,6 +1,7 @@
 package com.promptpicture.dellerestclient.adapter;
 
 import com.promptpicture.backend.core.delle.adapter.DellEAdapter;
+import com.promptpicture.backend.core.prompt.domain.CreateIndividualPrompt;
 import com.promptpicture.dellerestclient.client.DellERestClient;
 import com.promptpicture.dellerestclient.factory.DellERequestFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +16,13 @@ public class DellERepository implements DellEAdapter {
 
     public String generatePicture(String promptText) {
         var request = dellERequestFactory.create(promptText);
+        var response = dellERestClient.getPicture(request);
+        return response.getData().get(0).getB64Json();
+    }
+
+    @Override
+    public String generateIndividualPrompt(CreateIndividualPrompt createIndividualPrompt) {
+        var request = dellERequestFactory.create(createIndividualPrompt);
         var response = dellERestClient.getPicture(request);
         return response.getData().get(0).getB64Json();
     }

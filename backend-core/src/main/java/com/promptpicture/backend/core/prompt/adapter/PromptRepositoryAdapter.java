@@ -1,5 +1,6 @@
 package com.promptpicture.backend.core.prompt.adapter;
 
+import com.promptpicture.backend.core.prompt.domain.IndividualPrompt;
 import com.promptpicture.backend.core.prompt.domain.Prompt;
 import com.promptpicture.backend.core.prompt.domain.PromptFilter;
 
@@ -9,6 +10,8 @@ import java.util.UUID;
 public interface PromptRepositoryAdapter {
 
     void savePromptPicture(Long promptId, List<String> listOfTags);
+
+    IndividualPrompt saveIndividualPrompt(String promptText, String b64Json, UUID userId);
 
     Prompt savePromptPictureTemporarily(String promptText, String b64Json, UUID userId);
 

@@ -14,9 +14,10 @@ public interface PromptEntityRepository extends JpaRepository<PromptEntity,Long>
     @Query("SELECT pe FROM PromptEntity pe JOIN FETCH pe.customerEntity" +
             " WHERE pe.customerEntity.externalCustomerId = :externalCustomerId " +
             "AND pe.saved = false " +
+            "AND pe.individual = false " +
             " ORDER BY pe.id ASC ")
     List<PromptEntity> getPromptEntityByUserIdAndSavedIsFalseOrderByCreatedAtAsc(@Param("externalCustomerId") UUID externalCustomerId);
 
-    List<PromptEntity> getPromptEntityBySavedIsTrue();
+    List<PromptEntity> getPromptEntityBySavedIsTrueAndIndividualIsFalse();
 
 }

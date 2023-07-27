@@ -2,8 +2,10 @@ package com.promptpicture.backend.db_adapter.prompt.adapter;
 
 import com.promptpicture.backend.core.exception.business.BadRequestException;
 import com.promptpicture.backend.core.prompt.adapter.PromptRepositoryAdapter;
+import com.promptpicture.backend.core.prompt.domain.IndividualPrompt;
 import com.promptpicture.backend.core.prompt.domain.Prompt;
 import com.promptpicture.backend.core.prompt.domain.PromptFilter;
+import com.promptpicture.backend.db_adapter.prompt.mapper.PromptEntity2IndividualPromptMapper;
 import com.promptpicture.backend.db_adapter.prompt.mapper.PromptEntity2PromptMapper;
 import com.promptpicture.backend.jpa.customer.entity.CustomerEntity;
 import com.promptpicture.backend.jpa.customer.repository.CustomerEntityRepository;
@@ -32,7 +34,7 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
     private final CustomerEntityRepository customerEntityRepository;
     private final PromptEntity2PromptMapper promptEntity2PromptMapper;
     private final TagEntityRepository tagEntityRepository;
-    private final PriceEntityRepository priceEntityRepository;
+    private final PromptEntity2IndividualPromptMapper promptEntity2IndividualPromptMapper;
 
     @Override
     @Transactional
@@ -49,13 +51,30 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
             promptEntityRepository.save(promptEntity);
         }
     }
+
+    @Override
+    public IndividualPrompt saveIndividualPrompt(String promptText, String b64Json, UUID userId) {
+        var promptEntity = createPromptEntity(b64Json,promptText, true,true);
+        var customerEntity = customerEntityRepository.findByExternalCustomerId(userId);
+        if (customerEntity.isPresent()) {
+            promptEntity.setCustomerEntity(customerEntity.get());
+        } else {
+            var newCustomerEntity = new CustomerEntity();
+            newCustomerEntity.setExternalCustomerId(userId);
+            newCustomerEntity.setCountry(CZECH_REPUBLIC_COUNTRY_CODE);
+            promptEntity.setCustomerEntity(newCustomerEntity);
+        }
+        var savedPromptEntity = promptEntityRepository.save(promptEntity);
+        return promptEntity2IndividualPromptMapper.map(savedPromptEntity);
+    }
+
     private List<TagEntity> getTags(List<String> userListTag){
         return tagEntityRepository.findAllByTagNameIn(userListTag);
     }
 
     @Override
     public Prompt savePromptPictureTemporarily(String promptText, String b64Json, UUID userId) {
-        var promptEntity = createPromptEntity(b64Json,promptText, false);
+        var promptEntity = createPromptEntity(b64Json,promptText, false, false);
         var customerEntity = customerEntityRepository.findByExternalCustomerId(userId);
         if (customerEntity.isPresent()) {
             promptEntity.setCustomerEntity(customerEntity.get());
@@ -73,7 +92,7 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
     public List<Prompt> getListOfPrompt(PromptFilter promptFilter) {
 
         var listOfTag = promptFilter.getListOfTag();
-        var promptEntities = promptEntityRepository.getPromptEntityBySavedIsTrue();
+        var promptEntities = promptEntityRepository.getPromptEntityBySavedIsTrueAndIndividualIsFalse();
 
          if (!listOfTag.isEmpty()) {
              var filteredPromptEntities = promptEntities.stream().filter(promptEntity -> {
@@ -116,14 +135,14 @@ public class PromptJpaRepositoryAdapter implements PromptRepositoryAdapter {
         return promptEntity2PromptMapper.toListOfPrompt(listOfAllPromptEntity);
     }
 
-    private PromptEntity createPromptEntity(String b64TextJson, String promptText, boolean saved){
+    private PromptEntity createPromptEntity(String b64TextJson, String promptText, boolean saved, boolean individual){
         var promptEntity = new PromptEntity();
         var promptPictureEntity = new PromptPictureEntity();
         promptPictureEntity.setText(promptText);
         promptPictureEntity.setFileB64JsonText(b64TextJson);
         promptEntity.setPromptPictureEntity(promptPictureEntity);
         promptEntity.setSaved(saved);
-        promptEntity.setIndividual(false);
+        promptEntity.setIndividual(individual);
 
         return promptEntity;
     }

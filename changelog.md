@@ -27,6 +27,7 @@
 - aitest-54 - add removing data from the cart table after sending an order
 - aitest-40 - add order summary
   aitest-46 - add job for checking changed order items
+- aitest-36 - add generation of individual prompt picture
 
 ### Fix
 
